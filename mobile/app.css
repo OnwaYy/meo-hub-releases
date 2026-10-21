@@ -107,3 +107,7 @@ label { display: flex; flex-direction: column; gap: 6px; font-size: 13px; color:
 
 .keys { scrollbar-width: none; } .keys::-webkit-scrollbar { display: none; }
 .screen-lines::-webkit-scrollbar { width: 4px; } .screen-lines::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+
+.ag-subs { display: flex; flex-direction: column; gap: 3px; margin: 6px 0; font-size: 12.5px; }
+.ag-subs span { color: var(--accent); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ag-subs span.done { color: var(--muted); }

@@ -12,6 +12,8 @@ let channel = null;
 let helloTimer = null;
 let openPane = null;
 let prevStates = {};
+let lastSendError = '';
+let bootAt = 0;
 
 function toast(t) { const el = $('#toast'); el.textContent = t; el.classList.add('show'); clearTimeout(toast._t); toast._t = setTimeout(() => el.classList.remove('show'), 2600); }
 function show(id) { for (const s of ['#s-login', '#s-pair', '#s-main']) $(s).classList.toggle('hidden', s !== id); }
@@ -45,7 +47,11 @@ async function send(body) {
   const key = await crypto.subtle.importKey('raw', enc.encode(p.secret), { name: 'HMAC', hash: 'SHA-256' }, false, ['sign']);
   const sig = [...new Uint8Array(await crypto.subtle.sign('HMAC', key, enc.encode(str)))].map((b) => b.toString(16).padStart(2, '0')).join('');
   const { error } = await sb.from('remote_commands').insert({ payload: { device: p.id, body: str, sig } });
-  if (error) { toast(/Trop de commandes/.test(error.message) ? 'Trop de commandes, attends un peu.' : 'Envoi impossible : vérifie ta connexion.'); return false; }
+  if (error) {
+    lastSendError = /does not exist|relation|schema cache/i.test(error.message) ? 'Les tables du mobile n\'existent pas encore : relance le script SQL « MEO Hub » dans Supabase.' : /Trop de commandes/.test(error.message) ? 'Trop de commandes, attends un peu.' : `Envoi impossible : ${error.message}`;
+    toast(lastSendError); renderStatus(); return false;
+  }
+  lastSendError = '';
   return true;
 }
 function hello() { if (document.visibilityState === 'visible') send({ type: 'hello', name: deviceName() }); }
@@ -62,7 +68,14 @@ async function boot() {
   hello();
   clearInterval(helloTimer);
   helloTimer = setInterval(hello, 30000);
+  bootAt = Date.now();
   setInterval(renderStatus, 5000);
+  // Secours si le temps réel ne passe pas : relève l'état toutes les 5 s
+  setInterval(async () => {
+    if (document.visibilityState !== 'visible' || !user) return;
+    const { data } = await sb.from('remote_state').select('state').eq('user_id', user.id).maybeSingle();
+    if (data?.state && (!state || data.state.at > state.at)) setState(data.state);
+  }, 5000);
 }
 async function subscribe() {
   const { data } = await sb.from('remote_state').select('state, updated_at').eq('user_id', user.id).maybeSingle();
@@ -116,7 +129,9 @@ function setState(s) {
 function renderStatus() {
   const on = online();
   $('#pc-dot').className = `dot ${state ? (on ? 'on' : 'off') : ''}`;
-  $('#pc-text').textContent = !state ? 'En attente du PC…' : on ? `PC en ligne · ${state.pc?.host || ''}` : 'PC hors ligne ou MEO Hub fermé';
+  $('#pc-text').textContent = lastSendError ? lastSendError
+    : !state || !on ? (Date.now() - bootAt > 15000 ? 'Le PC ne répond pas : vérifie que MEO Hub est ouvert et que « MEO Hub mobile » est activé dans Compte.' : 'En attente du PC…')
+    : `PC en ligne · ${state.pc?.host || ''}`;
 }
 function fmtHour(ms) { return ms ? new Date(ms).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' }) : ''; }
 function limBar(label, l) {
@@ -152,6 +167,7 @@ function render() {
         <div class="ag-top"><strong>${esc(a.name)}</strong>${stateChip(a)}</div>
         ${a.mission?.activite ? `<div class="ag-act">${esc(a.mission.activite)}</div>` : ''}
         ${steps.length ? `<div class="progress">${steps.map((s) => `<i class="${esc(s.etat)}"></i>`).join('')}</div>` : ''}
+        ${(a.subs || []).filter((x) => !x.end).length ? `<div class="ag-subs">${a.subs.filter((x) => !x.end).map((x) => `<span>${esc(x.type)} · ${esc(x.desc)}</span>`).join('')}</div>` : ''}
         <div class="ag-last">${esc(last)}</div></button>`;
     }).join('') : '<div class="empty">Aucun agent lancé.<br>Lance-en un depuis ici ou depuis le PC.</div>';
   $$('#agents .agent').forEach((b) => b.addEventListener('click', () => openAgent(b.dataset.pane)));
@@ -186,7 +202,8 @@ function renderAgent(scroll) {
   $('#ag-state').outerHTML = stateChip(a).replace('<span class="chip', '<span id="ag-state" class="chip');
   const m = a.mission || {};
   $('#ag-mission').innerHTML = (m.titre ? `<strong>${esc(m.titre)}</strong>` : '') + (m.activite ? `<div class="muted">${esc(m.activite)}</div>` : '')
-    + (m.etapes?.length ? `<ol>${m.etapes.map((s) => `<li class="${esc(s.etat)}">${esc(s.texte)}</li>`).join('')}</ol>` : '');
+    + (m.etapes?.length ? `<ol>${m.etapes.map((s) => `<li class="${esc(s.etat)}">${esc(s.texte)}</li>`).join('')}</ol>` : '')
+    + ((a.subs || []).length ? `<div class="ag-subs">${a.subs.slice(-6).map((x) => `<span class="${x.end ? 'done' : 'run'}">${x.end ? '✓' : '●'} ${esc(x.type)} · ${esc(x.desc)}</span>`).join('')}</div>` : '');
   const box = $('#ag-lines');
   const atBottom = box.scrollTop + box.clientHeight >= box.scrollHeight - 30;
   box.textContent = (a.lines || []).join('\n');
