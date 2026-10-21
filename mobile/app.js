@@ -1,5 +1,5 @@
 // MEO Hub mobile : suit et pilote les agents du PC via Supabase (état publié par le PC, commandes signées)
-const MOBILE_VERSION = '1.1.0';
+const MOBILE_VERSION = '1.1.1';
 const $ = (s, r = document) => r.querySelector(s);
 const $$ = (s, r = document) => [...r.querySelectorAll(s)];
 const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
@@ -168,6 +168,15 @@ setInterval(checkUpdate, 5 * 60 * 1000);
 // ---------- Affichage général ----------
 const online = () => state && Date.now() - state.at < 45000;
 function setState(s) {
+  // Le PC ne reconnaît plus ce téléphone (QR code expiré ou appareil retiré)
+  if (s.rejected) {
+    if (s.rejected === pairing()?.id && Date.now() - s.at < 120000) {
+      lsSet('meo-pair', null);
+      show('#s-pair');
+      toast('Ton PC ne reconnaît plus ce téléphone : scanne un nouveau QR code depuis Compte sur le PC.');
+    }
+    return;
+  }
   state = s;
   for (const a of s.agents || []) {
     const before = prevStates[a.pane];
