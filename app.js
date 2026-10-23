@@ -1,5 +1,5 @@
 // MEO Hub mobile : suit et pilote les agents du PC via Supabase (état publié par le PC, commandes signées)
-const MOBILE_VERSION = '1.1.2';
+const MOBILE_VERSION = '1.2.0';
 const $ = (s, r = document) => r.querySelector(s);
 const $$ = (s, r = document) => [...r.querySelectorAll(s)];
 const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
@@ -96,6 +96,7 @@ async function boot() {
   $('#me-email').textContent = user.email;
   await subscribe();
   hello();
+  loadTeam().catch(() => {});
   if (started) return;
   started = true;
   bootAt = Date.now();
@@ -224,6 +225,7 @@ function render() {
   renderAgents(agents);
   renderPlan();
   renderGame();
+  if (teamTab || team) renderTeam();
   if (openPane) renderAgent();
   if (diffPane) renderDiff();
 }
@@ -441,10 +443,69 @@ function renderGame() {
 }
 $('#save-version').addEventListener('click', () => { if (!state?.project) { toast('Aucun jeu ouvert.'); return; } send({ type: 'saveVersion' }); });
 
+// ---------- Onglet Équipe (directement avec Supabase : marche même si le PC est éteint) ----------
+let team = null; let teamMsgs = []; let teamChannel = null; let teamTab = false;
+const teamName = (uid) => { const m = (team?.members || []).find((x) => x.user_id === uid); return m ? m.email.split('@')[0] : 'Ancien membre'; };
+async function loadTeam() {
+  const { data, error } = await sb.rpc('team_state');
+  if (error) { team = null; renderTeam(); return; }
+  const had = team?.team?.id;
+  team = data && data.team ? data : null;
+  if (team && team.team.id !== had) {
+    const r = await sb.from('team_messages').select('id,user_id,text,created_at').eq('team_id', team.team.id).order('created_at', { ascending: false }).limit(60);
+    teamMsgs = (r.data || []).reverse();
+    subscribeTeam();
+  }
+  renderTeam();
+}
+function subscribeTeam() {
+  if (teamChannel) { try { sb.removeChannel(teamChannel); } catch {} teamChannel = null; }
+  if (!team) return;
+  teamChannel = sb.channel(`m-team-${team.team.id}`)
+    .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'team_messages', filter: `team_id=eq.${team.team.id}` }, (m) => {
+      if (teamMsgs.some((x) => x.id === m.new.id)) return;
+      teamMsgs.push(m.new);
+      renderTeam();
+      if (m.new.user_id !== user?.id && !teamTab) try { navigator.vibrate?.(30); } catch {}
+    })
+    .subscribe();
+}
+const seenKey = () => `meo-team-seen-${team?.team?.id}`;
+function renderTeam() {
+  $('#team-none').classList.toggle('hidden', !!team);
+  $('#team-yes').classList.toggle('hidden', !team);
+  const unread = team ? teamMsgs.filter((m) => m.user_id !== user?.id && Date.parse(m.created_at) > Number(lsGet(seenKey()) || 0)).length : 0;
+  $('#team-badge').textContent = unread || '';
+  $('#team-badge').classList.toggle('hidden', !unread || teamTab);
+  if (!team) return;
+  if (teamTab) lsSet(seenKey(), String(Date.now()));
+  $('#team-name').textContent = team.team.name;
+  $('#team-members').textContent = (team.members || []).map((m) => m.email.split('@')[0] + (m.role === 'chef' ? ' (chef)' : '')).join(' · ');
+  // Jeu partagé ouvert sur le PC
+  const ts = state?.teamsync;
+  $('#team-sync').innerHTML = ts ? `<div class="card small-card"><div class="task-text"><strong>${esc(state.project?.name || '')} · ${ts.busy ? 'synchronisation…' : ts.error ? 'synchro en erreur' : 'code à jour'}</strong><span>${ts.error ? esc(ts.error) : ts.lastIncoming ? `${esc(ts.lastIncoming.by || 'Un membre')} a envoyé ${ts.lastIncoming.count} fichier${ts.lastIncoming.count > 1 ? 's' : ''} ${esc(ago(ts.lastIncoming.at))}` : ts.lastSync ? `dernière synchro ${esc(ago(ts.lastSync))}` : ''}</span>${(ts.conflicts || []).length ? `<span class="warn-t">${ts.conflicts.length} conflit${ts.conflicts.length > 1 ? 's' : ''} à fusionner sur le PC</span>` : ''}</div></div>` : '';
+  const log = $('#team-log');
+  const atBottom = log.scrollTop + log.clientHeight >= log.scrollHeight - 40;
+  log.innerHTML = teamMsgs.length ? teamMsgs.map((m) => `<div class="bub ${m.user_id === user?.id ? 'user' : 'assistant'}"><span class="who">${esc(m.user_id === user?.id ? 'Toi' : teamName(m.user_id))} · ${fmtHour(Date.parse(m.created_at))}</span><p>${esc(m.text)}</p></div>`).join('') : '<div class="empty">Pas encore de message.</div>';
+  if (atBottom || teamTab) log.scrollTop = log.scrollHeight;
+}
+$('#team-form').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const t = $('#team-text'); const text = t.value.trim();
+  if (!text || !team) return;
+  t.value = ''; autoGrow(t);
+  const { error } = await sb.from('team_messages').insert({ team_id: team.team.id, text });
+  if (error) { t.value = text; toast(/Trop de messages/.test(error.message) ? 'Trop de messages, attends une minute.' : 'Message non envoyé, réessaie.'); }
+});
+$('#team-text').addEventListener('input', (e) => autoGrow(e.target));
+setInterval(() => { if (user && document.visibilityState === 'visible') loadTeam(); }, 60 * 1000);
+
 // ---------- Onglets ----------
 function switchTab(name) {
   $$('.bottom .nav').forEach((x) => x.classList.toggle('active', x.dataset.tab === name));
   $$('.tab').forEach((t) => t.classList.toggle('active', t.id === `t-${name}`));
+  teamTab = name === 'team';
+  if (teamTab) { loadTeam(); renderTeam(); }
 }
 $$('.bottom .nav').forEach((b) => b.addEventListener('click', () => switchTab(b.dataset.tab)));
 

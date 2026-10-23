@@ -177,3 +177,6 @@ h2.sec:first-child { margin-top: 4px; }
 .dsep { text-align: center; color: var(--muted); font-size: 11px; }
 textarea { scrollbar-width: none; } textarea::-webkit-scrollbar { display: none; }
 .md em { color: var(--muted); }
+.team-log { max-height: calc(100vh - 330px); min-height: 200px; overflow-y: auto; }
+.bub .who { display: block; font-size: 11px; opacity: .7; margin-bottom: 2px; }
+.warn-t { color: #ffb27a; font-size: 12px; }

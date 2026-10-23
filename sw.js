@@ -1,5 +1,5 @@
 // Service worker : l'appli s'ouvre instantanément (coquille en cache), les données viennent toujours du réseau
-const CACHE = 'meo-mobile-1.1.2';
+const CACHE = 'meo-mobile-1.2.0';
 const SHELL = ['./', './index.html', './app.css', './app.js', './config.js', './supabase.js', './icon-192.png', './manifest.webmanifest'];
 // version.json n'est jamais mis en cache : il sert à détecter les mises à jour
 self.addEventListener('install', (e) => { e.waitUntil(caches.open(CACHE).then((c) => c.addAll(SHELL)).then(() => self.skipWaiting())); });
