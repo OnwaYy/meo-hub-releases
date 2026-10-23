@@ -1,6 +1,7 @@
 // MEO Hub — site de vente : réglages à remplir ici, puis langue, démo animée, visite de l'appli
 const SITE = {
-  price: { fr: '49 €', en: '€49' },  // prix affiché (le vrai prix est celui de la boutique Lemon Squeezy)
+  price: { fr: '149 €', en: '€149' }, // prix affiché (le vrai prix est celui de la boutique Lemon Squeezy)
+  downloadUrl: 'https://github.com/OnwaYy/meo-hub-releases/releases/latest', // téléchargement gratuit (test du PC)
   checkoutUrl: '',                   // lien de paiement Lemon Squeezy (vide = « La vente ouvre très bientôt »)
   contactEmail: ''                   // email de contact affiché en bas de page
 };
@@ -22,6 +23,8 @@ function setLang(l) {
   try { localStorage.setItem('meo-lang', l); } catch {}
   showShot(currentShot);
   startDemo();
+  if (typeof renderCheck === 'function') renderCheck();
+  const ti = $('#try-text'); if (ti) ti.placeholder = l === 'fr' ? 'Ou écris ta demande : ajoute un classement…' : 'Or type your request: add a leaderboard…';
 }
 
 // ---------- Barre du haut ----------
@@ -140,6 +143,162 @@ async function startDemo() {
     startDemo();
   } catch { /* démo relancée (changement de langue) */ }
 }
+
+
+
+// ---------- Téléchargement gratuit ----------
+const dl = $('#download');
+if (dl) { dl.href = SITE.downloadUrl; dl.target = '_blank'; dl.rel = 'noopener'; }
+
+// ---------- Essai : le Chef de projet découpe une tâche ----------
+const TASKS = {
+  fr: {
+    shop: { plan: 'Boutique : 2 gamepasses, un écran, un bouton mobile, des tests.', subs: [['S', 'Scripteur', 'Gamepasses x2 Coins et VIP', ['ShopService.luau', 'Gamepasses.luau']], ['I', 'Interface', 'Écran de boutique', ['Shop.client.luau', 'ShopButton.luau']], ['T', 'Testeur', 'Achats en jeu', ['test : achat simulé ✓']]] },
+    eggs: { plan: 'Œufs : tirage des raretés, écran d\'ouverture, sauvegarde, tests.', subs: [['S', 'Scripteur', 'Tirage des raretés', ['EggService.luau', 'Rarities.luau']], ['I', 'Interface', 'Écran d\'ouverture', ['Hatch.client.luau']], ['M', 'Map', 'Présentoir des œufs', ['Studio : EggStand']], ['T', 'Testeur', 'Probabilités et sauvegarde', ['1 000 tirages ✓']]] },
+    lag: { plan: 'Lag mobile : trouver les causes, corriger, mesurer.', subs: [['R', 'Recherche', 'Causes du lag', ['carte du code', '3 boucles trouvées']], ['S', 'Scripteur', 'Boucles et remotes', ['Pets.server.luau', 'Remotes.luau']], ['T', 'Testeur', 'Mesure sur mobile', ['60 → 58 ips ✓']]] },
+    custom: (t) => ({ plan: `« ${t} » : découpé en 3 parties.`, subs: [['S', 'Scripteur', 'Logique du jeu', ['Service.luau']], ['I', 'Interface', 'Ce que voit le joueur', ['Ui.client.luau']], ['T', 'Testeur', 'Test en jeu', ['playtest ✓']]] }),
+    done: (n) => `✓ Terminé · ${n} fichiers envoyés dans Studio · annulable en un clic`,
+    chef: 'Chef de projet'
+  },
+  en: {
+    shop: { plan: 'Shop: 2 gamepasses, a screen, a mobile button, tests.', subs: [['S', 'Scripter', 'x2 Coins and VIP passes', ['ShopService.luau', 'Gamepasses.luau']], ['U', 'UI', 'Shop screen', ['Shop.client.luau', 'ShopButton.luau']], ['T', 'Tester', 'In-game purchases', ['test: simulated buy ✓']]] },
+    eggs: { plan: 'Eggs: rarity rolls, hatch screen, saving, tests.', subs: [['S', 'Scripter', 'Rarity rolls', ['EggService.luau', 'Rarities.luau']], ['U', 'UI', 'Hatch screen', ['Hatch.client.luau']], ['M', 'Map', 'Egg stand', ['Studio: EggStand']], ['T', 'Tester', 'Odds and saving', ['1,000 rolls ✓']]] },
+    lag: { plan: 'Mobile lag: find the causes, fix, measure.', subs: [['R', 'Research', 'Lag causes', ['code map', '3 loops found']], ['S', 'Scripter', 'Loops and remotes', ['Pets.server.luau', 'Remotes.luau']], ['T', 'Tester', 'Mobile measure', ['60 → 58 fps ✓']]] },
+    custom: (t) => ({ plan: `"${t}": split into 3 parts.`, subs: [['S', 'Scripter', 'Game logic', ['Service.luau']], ['U', 'UI', 'What the player sees', ['Ui.client.luau']], ['T', 'Tester', 'Playtest', ['playtest ✓']]] }),
+    done: (n) => `✓ Done · ${n} files sent to Studio · one-click undo`,
+    chef: 'Project lead'
+  }
+};
+const COLORS = ['#5b8cff', '#8f6bff', '#4fe0a0', '#ffb03a'];
+let tryRun = 0;
+async function runTask(key, text) {
+  const id = ++tryRun; const T = TASKS[lang()];
+  const task = key === 'custom' ? T.custom(text) : T[key];
+  const box = $('#try-run');
+  const wait = (ms) => new Promise((r) => setTimeout(r, calm ? 0 : ms));
+  box.innerHTML = `<div class="chef-card"><b>${T.chef}</b><p id="chef-line"></p></div>`;
+  const line = $('#chef-line');
+  for (const ch of task.plan) { if (id !== tryRun) return; line.textContent += ch; if (!calm) await wait(14); }
+  let files = 0;
+  const cards = task.subs.map(([ic, who, what, fl], i) => {
+    const el = document.createElement('div');
+    el.className = 'sub';
+    el.innerHTML = `<span class="who" style="background:${COLORS[i % 4]}22;color:${COLORS[i % 4]}">${ic}</span><strong>${who} · ${what}</strong><span class="pct">0 %</span><span class="file"></span><span class="bar"><i style="background:${COLORS[i % 4]}"></i></span>`;
+    box.appendChild(el);
+    return { el, fl };
+  });
+  for (const c of cards) { await wait(220); if (id !== tryRun) return; c.el.classList.add('in'); }
+  await Promise.all(cards.map(async (c, i) => {
+    const dur = 1800 + Math.random() * 1800 + i * 300;
+    const t0 = performance.now();
+    let fi = 0;
+    while (true) {
+      if (id !== tryRun) return;
+      const p = Math.min(1, (performance.now() - t0) / (calm ? 1 : dur));
+      $('.bar i', c.el).style.width = `${Math.round(p * 100)}%`;
+      $('.pct', c.el).textContent = `${Math.round(p * 100)} %`;
+      const want = Math.min(c.fl.length, Math.floor(p * c.fl.length + .4));
+      while (fi < want) { $('.file', c.el).textContent = c.fl[fi]; fi++; files++; }
+      if (p >= 1) break;
+      await new Promise((r) => setTimeout(r, 90));
+    }
+    c.el.classList.add('done');
+  }));
+  if (id !== tryRun) return;
+  const done = document.createElement('div');
+  done.className = 'done-card'; done.textContent = T.done(files);
+  box.appendChild(done); await wait(30); done.classList.add('in');
+}
+$$('#try-chips button').forEach((b) => b.addEventListener('click', () => {
+  $$('#try-chips button').forEach((x) => x.classList.toggle('on', x === b));
+  runTask(b.dataset.task);
+}));
+$('#try-form')?.addEventListener('submit', (e) => {
+  e.preventDefault();
+  const t = $('#try-text').value.trim().slice(0, 90);
+  if (!t) { $('#try-text').focus(); return; }
+  $$('#try-chips button').forEach((x) => x.classList.remove('on'));
+  runTask('custom', t);
+});
+// Lancée toute seule quand on arrive dessus
+if ('IntersectionObserver' in window) {
+  const tio = new IntersectionObserver((es) => { if (es[0].isIntersecting) { tio.disconnect(); if (!tryRun) $('#try-chips button')?.click(); } }, { threshold: .4 });
+  const tb = $('.try-box'); if (tb) tio.observe(tb);
+}
+
+// ---------- Ton PC est-il prêt ? (même calcul que le test de l'appli) ----------
+const pc = { ram: 16, cpu: 8, gpu: 1 };
+function renderCheck() {
+  const fr = lang() === 'fr';
+  let agents = Math.max(0, Math.min(4, Math.floor((pc.ram - 7) / 0.6)));
+  agents = Math.min(agents, pc.cpu <= 4 ? 2 : pc.cpu <= 8 ? 3 : 4);
+  const blender = pc.gpu === 1 && pc.ram >= 16;
+  const level = pc.ram < 8 || agents < 1 ? 'bad' : pc.ram < 16 || pc.cpu <= 4 || !pc.gpu ? 'warn' : 'ok';
+  const v = $('#cr-verdict');
+  v.className = `cr-verdict ${level}`;
+  v.textContent = level === 'ok' ? (fr ? 'Ton PC peut tout faire tourner.' : 'Your PC can run it all.')
+    : level === 'warn' ? (fr ? 'Ça marche, avec quelques limites.' : 'It works, with a few limits.')
+    : (fr ? 'Trop juste pour MEO Hub.' : 'Too tight for MEO Hub.');
+  $$('#cr-agents i').forEach((d, i) => setTimeout(() => d.classList.toggle('on', i < agents), calm ? 0 : i * 90));
+  const st = $('#cr-studio'); st.textContent = fr ? 'Oui' : 'Yes'; st.className = 'yes';
+  const bl = $('#cr-blender'); bl.textContent = blender ? (fr ? 'Oui' : 'Yes') : (fr ? 'Lent ou trop juste' : 'Slow or too tight'); bl.className = blender ? 'yes' : 'no';
+}
+$$('.seg').forEach((g) => $$('button', g).forEach((b) => b.addEventListener('click', () => {
+  $$('button', g).forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
+  pc[g.dataset.q] = Number(b.dataset.v);
+  renderCheck();
+})));
+
+// ---------- Braises qui montent dans le héros ----------
+(function embers() {
+  const c = $('#embers');
+  if (!c || calm) return;
+  const ctx = c.getContext('2d');
+  let w = 0; let h = 0; let parts = []; let visible = true;
+  const size = () => { const r = c.getBoundingClientRect(); w = c.width = r.width * devicePixelRatio; h = c.height = r.height * devicePixelRatio; };
+  const spawn = () => ({ x: Math.random() * w, y: h + Math.random() * h * .3, r: (Math.random() * 1.8 + .6) * devicePixelRatio, vy: (Math.random() * .5 + .25) * devicePixelRatio, vx: (Math.random() - .5) * .3 * devicePixelRatio, life: 0, max: 400 + Math.random() * 500, hue: 20 + Math.random() * 25 });
+  size(); addEventListener('resize', size);
+  parts = Array.from({ length: 70 }, () => { const p = spawn(); p.y = Math.random() * h; p.life = Math.random() * p.max; return p; });
+  new IntersectionObserver((es) => { visible = es[0].isIntersecting; }).observe(c);
+  (function tick() {
+    if (visible) {
+      ctx.clearRect(0, 0, w, h);
+      for (const p of parts) {
+        p.life++; p.y -= p.vy; p.x += p.vx + Math.sin(p.life / 40) * .2;
+        const a = Math.max(0, Math.sin(Math.PI * p.life / p.max)) * .8;
+        ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+        ctx.fillStyle = `hsla(${p.hue}, 100%, 62%, ${a})`; ctx.shadowColor = `hsla(${p.hue}, 100%, 55%, ${a})`; ctx.shadowBlur = 12;
+        ctx.fill();
+        if (p.life > p.max || p.y < -10) Object.assign(p, spawn());
+      }
+    }
+    requestAnimationFrame(tick);
+  })();
+})();
+
+// ---------- Effets à la souris ----------
+if (!calm && matchMedia('(pointer: fine)').matches) {
+  // Lumière qui suit la souris sur les tuiles
+  $$('.tile').forEach((t) => t.addEventListener('pointermove', (e) => { const r = t.getBoundingClientRect(); t.style.setProperty('--mx', `${e.clientX - r.left}px`); t.style.setProperty('--my', `${e.clientY - r.top}px`); }));
+  // La capture de l'appli s'incline vers la souris
+  const scr = $('.screen'); const fr = $('.screen-frame');
+  scr?.addEventListener('pointermove', (e) => { const r = scr.getBoundingClientRect(); const x = (e.clientX - r.left) / r.width - .5; const y = (e.clientY - r.top) / r.height - .5; fr.style.transform = `rotateX(${(-y * 6).toFixed(2)}deg) rotateY(${(x * 8).toFixed(2)}deg)`; });
+  scr?.addEventListener('pointerleave', () => { fr.style.transform = ''; });
+}
+// Le tableau des agents se redresse quand on descend
+const board = $('#board');
+if (board && !calm) addEventListener('scroll', () => { const p = Math.min(1, Math.max(0, scrollY / 420)); board.style.transform = `rotateX(${(8 * (1 - p)).toFixed(2)}deg) scale(${(1 + p * .02).toFixed(3)})`; }, { passive: true });
+// Étincelles quand on clique sur Acheter
+document.addEventListener('click', (e) => {
+  const b = e.target.closest('.btn.buy'); if (!b || calm) return;
+  for (let i = 0; i < 14; i++) {
+    const s = document.createElement('span'); s.className = 'spark';
+    s.style.left = `${e.clientX}px`; s.style.top = `${e.clientY}px`;
+    document.body.appendChild(s);
+    const a = Math.random() * Math.PI * 2; const d = 40 + Math.random() * 70;
+    s.animate([{ transform: 'translate(0,0) scale(1)', opacity: 1 }, { transform: `translate(${Math.cos(a) * d}px, ${Math.sin(a) * d - 30}px) scale(.2)`, opacity: 0 }], { duration: 650 + Math.random() * 300, easing: 'cubic-bezier(.2,.7,.3,1)' }).onfinish = () => s.remove();
+  }
+});
 
 $('#lang').addEventListener('click', () => setLang(lang() === 'fr' ? 'en' : 'fr'));
 setLang(pickLang());

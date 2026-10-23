@@ -13,7 +13,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Figtree:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap">
-<link rel="stylesheet" href="style.css?v=2">
+<link rel="stylesheet" href="style.css?v=3">
 </head>
 <body>
 <a class="skip" href="#main"><span lang="fr">Aller au contenu</span><span lang="en">Skip to content</span></a>
@@ -24,8 +24,10 @@
   </a>
   <nav class="nav-links" aria-label="Sections">
     <a href="#tour"><span lang="fr">L'appli</span><span lang="en">The app</span></a>
+    <a href="#try"><span lang="fr">Essayer</span><span lang="en">Try it</span></a>
     <a href="#features"><span lang="fr">Fonctions</span><span lang="en">Features</span></a>
     <a href="#team"><span lang="fr">Équipe</span><span lang="en">Teams</span></a>
+    <a href="#check"><span lang="fr">Mon PC</span><span lang="en">My PC</span></a>
     <a href="#price"><span lang="fr">Prix</span><span lang="en">Pricing</span></a>
     <a href="#faq">FAQ</a>
   </nav>
@@ -39,6 +41,7 @@
   <!-- ============ HÉROS : la démo vivante ============ -->
   <section class="hero" id="top">
     <div class="hero-glow" aria-hidden="true"></div>
+    <canvas class="embers" id="embers" aria-hidden="true"></canvas>
     <div class="hero-head">
       <p class="kicker"><img src="img/logo-256.png" alt="" width="22" height="22"><span lang="fr">Pour Roblox Studio, avec Claude Code</span><span lang="en">For Roblox Studio, with Claude Code</span></p>
       <h1>
@@ -51,7 +54,7 @@
       </p>
       <div class="hero-cta">
         <a class="btn buy" href="#price"><span lang="fr">Acheter MEO Hub</span><span lang="en">Get MEO Hub</span><b data-price></b></a>
-        <a class="btn glass" href="#tour"><span lang="fr">Voir l'appli</span><span lang="en">See the app</span></a>
+        <a class="btn glass" href="#check"><span lang="fr">Tester mon PC gratuitement</span><span lang="en">Test my PC for free</span></a>
       </div>
       <p class="fine"><span lang="fr">Windows 10 et 11 · paiement unique · mises à jour comprises</span><span lang="en">Windows 10 and 11 · one-time payment · updates included</span></p>
     </div>
@@ -96,6 +99,28 @@
       <span lang="fr">Moins de tokens</span><span lang="en">Fewer tokens</span><i></i>
     </div>
   </div>
+
+  <!-- ============ ESSAI : donne une tâche ============ -->
+  <section class="try" id="try">
+    <div class="sec-head">
+      <h2><span lang="fr">Donne-lui une tâche.</span><span lang="en">Give it a task.</span></h2>
+      <p><span lang="fr">Choisis une demande ou écris la tienne : regarde le Chef de projet la découper et la répartir entre ses spécialistes.</span><span lang="en">Pick a request or write your own: watch the project lead split it and hand it to specialists.</span></p>
+    </div>
+    <div class="try-box">
+      <div class="try-ask">
+        <div class="chips" id="try-chips">
+          <button type="button" data-task="shop"><span lang="fr">Ajoute une boutique avec 2 gamepasses</span><span lang="en">Add a shop with 2 gamepasses</span></button>
+          <button type="button" data-task="eggs"><span lang="fr">Crée des œufs avec des raretés</span><span lang="en">Create eggs with rarities</span></button>
+          <button type="button" data-task="lag"><span lang="fr">Le jeu lag sur mobile, corrige</span><span lang="en">The game lags on mobile, fix it</span></button>
+        </div>
+        <form class="try-form" id="try-form">
+          <input id="try-text" maxlength="90" autocomplete="off" aria-label="Ta demande" placeholder="">
+          <button class="btn buy small" type="submit"><span lang="fr">Lancer</span><span lang="en">Run</span></button>
+        </form>
+      </div>
+      <div class="try-run" id="try-run"><p class="try-empty"><span lang="fr">Choisis une tâche pour lancer la démo.</span><span lang="en">Pick a task to start the demo.</span></p></div>
+    </div>
+  </section>
 
   <!-- ============ VISITE DE L'APPLI ============ -->
   <section class="tour" id="tour">
@@ -192,6 +217,30 @@
     </div>
   </section>
 
+  <!-- ============ TON PC ============ -->
+  <section class="check" id="check">
+    <div class="check-text">
+      <h2><span lang="fr">Ton PC est-il prêt ?</span><span lang="en">Is your PC ready?</span></h2>
+      <p class="big"><span lang="fr">Trois clics pour une estimation. Pour un vrai diagnostic, télécharge MEO Hub : son test de PC est gratuit, même sans licence.</span><span lang="en">Three clicks for an estimate. For a real diagnosis, download MEO Hub: its PC test is free, even without a licence.</span></p>
+      <div class="check-q">
+        <p><span lang="fr">Mémoire</span><span lang="en">Memory</span></p>
+        <div class="seg" data-q="ram"><button data-v="8">8 Go</button><button data-v="16" aria-pressed="true">16 Go</button><button data-v="32">32 Go +</button></div>
+        <p><span lang="fr">Processeur</span><span lang="en">Processor</span></p>
+        <div class="seg" data-q="cpu"><button data-v="4"><span lang="fr">4 cœurs</span><span lang="en">4 threads</span></button><button data-v="8" aria-pressed="true"><span lang="fr">6 à 8</span><span lang="en">6 to 8</span></button><button data-v="12">12 +</button></div>
+        <p><span lang="fr">Carte graphique</span><span lang="en">Graphics card</span></p>
+        <div class="seg" data-q="gpu"><button data-v="0"><span lang="fr">Intégrée</span><span lang="en">Integrated</span></button><button data-v="1" aria-pressed="true"><span lang="fr">Dédiée</span><span lang="en">Dedicated</span></button></div>
+      </div>
+    </div>
+    <div class="check-result" id="check-result">
+      <p class="cr-verdict" id="cr-verdict"></p>
+      <div class="cr-row"><span><span lang="fr">Agents en même temps</span><span lang="en">Agents at once</span></span><div class="cr-agents" id="cr-agents"><i></i><i></i><i></i><i></i></div></div>
+      <div class="cr-row"><span>Roblox Studio</span><b id="cr-studio"></b></div>
+      <div class="cr-row"><span>Blender</span><b id="cr-blender"></b></div>
+      <a class="btn glass big" id="download" href="#"><span lang="fr">Télécharger MEO Hub (gratuit)</span><span lang="en">Download MEO Hub (free)</span></a>
+      <p class="fine"><span lang="fr">Sans licence, seul le test du PC est accessible.</span><span lang="en">Without a licence, only the PC test is available.</span></p>
+    </div>
+  </section>
+
   <!-- ============ CE QU'IL TE FAUT ============ -->
   <section class="needs">
     <h2><span lang="fr">Ce qu'il te faut</span><span lang="en">What you need</span></h2>
@@ -210,6 +259,7 @@
         <p class="amount" data-price></p>
         <p class="muted"><span lang="fr">Paiement unique, toutes les mises à jour comprises.</span><span lang="en">One-time payment, every update included.</span></p>
         <a class="btn buy big" id="buy" href="#"><span lang="fr">Acheter MEO Hub</span><span lang="en">Buy MEO Hub</span></a>
+        <a class="dl-link" href="#check"><span lang="fr">Pas sûr ? Teste ton PC gratuitement</span><span lang="en">Not sure? Test your PC for free</span></a>
         <p class="fine" id="buy-soon" hidden><span lang="fr">La vente ouvre très bientôt.</span><span lang="en">Sales open very soon.</span></p>
       </div>
       <ul class="ticks price-list">
@@ -259,6 +309,6 @@
   <p class="fine"><span lang="fr">MEO Hub n'est affilié ni à Roblox Corporation ni à Anthropic. Roblox et Claude sont des marques de leurs propriétaires.</span><span lang="en">MEO Hub is not affiliated with Roblox Corporation or Anthropic. Roblox and Claude are trademarks of their respective owners.</span></p>
 </footer>
 
-<script src="site.js?v=2"></script>
+<script src="site.js?v=3"></script>
 </body>
 </html>
