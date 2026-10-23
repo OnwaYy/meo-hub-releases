@@ -5,23 +5,25 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>MEO Hub · l'atelier de vibe coding pour Roblox</title>
 <meta name="description" content="MEO Hub fait travailler plusieurs agents Claude Code sur ton jeu Roblox en même temps : plan du jeu, synchro avec Studio, annuler, mode équipe et appli mobile.">
-<meta property="og:title" content="MEO Hub · l'atelier de vibe coding pour Roblox">
+<meta property="og:title" content="MEO Hub · Arrête de copier-coller. Dirige une équipe.">
 <meta property="og:description" content="Plusieurs agents Claude Code sur ton jeu Roblox, en même temps. Tu diriges, ils codent.">
 <meta property="og:image" content="img/agents.webp">
+<meta name="theme-color" content="#070917">
 <link rel="icon" href="img/favicon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Figtree:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Figtree:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap">
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
 <a class="skip" href="#main"><span lang="fr">Aller au contenu</span><span lang="en">Skip to content</span></a>
 
-<header class="nav">
+<header class="nav" id="nav">
   <a class="brand" href="#top" aria-label="MEO Hub">
-    <img src="img/logo-256.png" alt="" width="34" height="34"><span>MEO Hub</span>
+    <img src="img/logo-256.png" alt="" width="36" height="36"><span>MEO Hub</span>
   </a>
   <nav class="nav-links" aria-label="Sections">
+    <a href="#tour"><span lang="fr">L'appli</span><span lang="en">The app</span></a>
     <a href="#features"><span lang="fr">Fonctions</span><span lang="en">Features</span></a>
     <a href="#team"><span lang="fr">Équipe</span><span lang="en">Teams</span></a>
     <a href="#price"><span lang="fr">Prix</span><span lang="en">Pricing</span></a>
@@ -34,152 +36,215 @@
 </header>
 
 <main id="main">
-  <!-- Héros : le produit lui-même -->
+  <!-- ============ HÉROS : la démo vivante ============ -->
   <section class="hero" id="top">
-    <div class="hero-text">
+    <div class="hero-glow" aria-hidden="true"></div>
+    <div class="hero-head">
+      <p class="kicker"><img src="img/logo-256.png" alt="" width="22" height="22"><span lang="fr">Pour Roblox Studio, avec Claude Code</span><span lang="en">For Roblox Studio, with Claude Code</span></p>
       <h1>
-        <span lang="fr">Tes agents codent ton jeu Roblox. Toi, tu diriges.</span>
-        <span lang="en">Your agents build your Roblox game. You call the shots.</span>
+        <span lang="fr"><span class="h1-a">Arrête de copier-coller.</span><span class="h1-b">Dirige une équipe.</span></span>
+        <span lang="en"><span class="h1-a">Stop copy-pasting.</span><span class="h1-b">Run a team.</span></span>
       </h1>
       <p class="lead">
-        <span lang="fr">MEO Hub fait travailler plusieurs agents Claude Code sur ton jeu en même temps, chacun sur sa tâche, avec le code envoyé tout seul dans Roblox Studio. Tu vois qui fait quoi, tu réponds d'un clic, et tu peux tout annuler.</span>
-        <span lang="en">MEO Hub runs several Claude Code agents on your game at once, each on its own task, with the code pushed straight into Roblox Studio. You see who is doing what, answer in one click, and can undo anything.</span>
+        <span lang="fr">MEO Hub fait travailler plusieurs agents IA sur ton jeu Roblox en même temps. Un Chef de projet découpe, des spécialistes codent, le code part tout seul dans Studio. Toi, tu valides.</span>
+        <span lang="en">MEO Hub puts several AI agents to work on your Roblox game at once. A project lead splits the work, specialists code it, and it flows straight into Studio. You just approve.</span>
       </p>
       <div class="hero-cta">
-        <a class="btn buy" href="#price"><span lang="fr">Acheter MEO Hub</span><span lang="en">Get MEO Hub</span> <b data-price></b></a>
-        <a class="btn ghost" href="#how"><span lang="fr">Voir comment ça marche</span><span lang="en">See how it works</span></a>
+        <a class="btn buy" href="#price"><span lang="fr">Acheter MEO Hub</span><span lang="en">Get MEO Hub</span><b data-price></b></a>
+        <a class="btn glass" href="#tour"><span lang="fr">Voir l'appli</span><span lang="en">See the app</span></a>
       </div>
-      <p class="fine"><span lang="fr">Windows 10 et 11 · achat unique, mises à jour comprises</span><span lang="en">Windows 10 and 11 · one-time purchase, updates included</span></p>
+      <p class="fine"><span lang="fr">Windows 10 et 11 · paiement unique · mises à jour comprises</span><span lang="en">Windows 10 and 11 · one-time payment · updates included</span></p>
     </div>
-    <figure class="hero-shot">
-      <img src="img/agents.webp" width="1440" height="900" alt="L'écran Agents de MEO Hub : trois agents côte à côte, un Chef de projet qui demande une autorisation, et le détail de sa mission à droite.">
-      <ol class="live" aria-hidden="true">
-        <li class="ask"><i></i><b>Chef de projet</b><span lang="fr">demande une autorisation</span><span lang="en">asks for permission</span></li>
-        <li class="work"><i></i><b>Interface</b><span lang="fr">travaille sur la boutique</span><span lang="en">is working on the shop</span></li>
-        <li class="done"><i></i><b>Testeur</b><span lang="fr">a fini : rien n'est perdu</span><span lang="en">done: nothing lost</span></li>
-      </ol>
-    </figure>
-  </section>
 
-  <!-- Comment ça se passe : une vraie séquence -->
-  <section class="how" id="how">
-    <h2><span lang="fr">Une journée de dev avec MEO Hub</span><span lang="en">A dev day with MEO Hub</span></h2>
-    <ol class="steps">
-      <li>
-        <h3><span lang="fr">Tu écris le plan du jeu</span><span lang="en">You write the game plan</span></h3>
-        <p><span lang="fr">Un assistant te pose les bonnes questions et range tout : concept, boucle de jeu, monétisation, puis une liste de tâches.</span><span lang="en">An assistant asks the right questions and organises everything: concept, game loop, monetisation, then a task list.</span></p>
-      </li>
-      <li>
-        <h3><span lang="fr">Tu lances une tâche</span><span lang="en">You launch a task</span></h3>
-        <p><span lang="fr">Le Chef de projet la découpe et la confie à des spécialistes (scripts, interface, map, test) qui travaillent en parallèle.</span><span lang="en">The Project lead splits it and hands it to specialists (scripts, UI, map, testing) who work in parallel.</span></p>
-      </li>
-      <li>
-        <h3><span lang="fr">Tu réponds quand on te demande</span><span lang="en">You answer when asked</span></h3>
-        <p><span lang="fr">Une autorisation, une question : un son, une pastille, et les boutons Autoriser ou Refuser. Même depuis ton téléphone.</span><span lang="en">A permission, a question: a sound, a badge, and Allow or Deny buttons. Even from your phone.</span></p>
-      </li>
-      <li>
-        <h3><span lang="fr">Le jeu avance dans Studio</span><span lang="en">The game moves forward in Studio</span></h3>
-        <p><span lang="fr">Le code part tout seul dans Roblox Studio. Un changement ne te plaît pas ? Tu vois ce que l'agent a modifié, et tu annules.</span><span lang="en">The code flows into Roblox Studio on its own. Don't like a change? See what the agent edited, and undo it.</span></p>
-      </li>
-    </ol>
-  </section>
-
-  <!-- Fonctions, avec les vraies captures -->
-  <section class="show" id="features">
-    <div class="show-text">
-      <h2><span lang="fr">Un plan que les agents suivent vraiment</span><span lang="en">A plan your agents actually follow</span></h2>
-      <p><span lang="fr">Le plan du jeu vit dans le projet. Les agents le lisent avant de coder et cochent les tâches qu'ils terminent : tu sais toujours où en est ton jeu.</span><span lang="en">The game plan lives inside the project. Agents read it before coding and tick off the tasks they finish, so you always know where your game stands.</span></p>
+    <!-- La démo : des agents qui travaillent vraiment (animation, pas une vidéo) -->
+    <div class="stage" aria-label="Démonstration : trois agents travaillent en même temps sur un jeu Roblox">
+      <div class="baseplate" aria-hidden="true"></div>
+      <div class="board" id="board">
+        <div class="board-top">
+          <span class="dots"><i></i><i></i><i></i></span>
+          <b>Pet Sim</b>
+          <span class="pill sync" id="sync-pill"><i></i><span lang="fr">Synchro Studio</span><span lang="en">Studio sync</span> <em id="sync-count">0</em></span>
+          <span class="pill usage"><span lang="fr">Claude</span><span lang="en">Claude</span> <em>42 %</em></span>
+        </div>
+        <div class="lanes">
+          <article class="lane" data-lane="0"><header><i class="st"></i><div><b><span lang="fr">Chef de projet</span><span lang="en">Project lead</span></b><span class="say"></span></div></header><div class="perm" hidden><span lang="fr">Lancer <code>rojo build</code> ?</span><span lang="en">Run <code>rojo build</code>?</span><button tabindex="-1"><span lang="fr">Autoriser</span><span lang="en">Allow</span></button></div><pre class="out"></pre></article>
+          <article class="lane" data-lane="1"><header><i class="st"></i><div><b><span lang="fr">Interface</span><span lang="en">UI</span></b><span class="say"></span></div></header><pre class="out"></pre></article>
+          <article class="lane" data-lane="2"><header><i class="st"></i><div><b><span lang="fr">Testeur</span><span lang="en">Tester</span></b><span class="say"></span></div></header><pre class="out"></pre></article>
+        </div>
+      </div>
     </div>
-    <img class="shot" src="img/plan.webp" width="1440" height="900" loading="lazy" alt="Le Plan du jeu : la discussion avec l'assistant à gauche, le plan et ses tâches cochées à droite.">
   </section>
 
-  <section class="show flip">
-    <div class="show-text">
-      <h2><span lang="fr">L'accueil te dit quoi faire maintenant</span><span lang="en">The home screen tells you what to do next</span></h2>
-      <p><span lang="fr">Les agents qui t'attendent, la prochaine tâche du plan, l'état de chacun, et une zone pour demander quelque chose, à l'écrit ou à la voix.</span><span lang="en">The agents waiting for you, the next task in the plan, everyone's status, and a box to ask for something, typed or spoken.</span></p>
+  <!-- ============ BANDEAU ============ -->
+  <div class="marquee" aria-hidden="true">
+    <div class="track">
+      <span lang="fr">Agents en parallèle</span><span lang="en">Parallel agents</span><i></i>
+      <span lang="fr">Synchro Studio</span><span lang="en">Studio sync</span><i></i>
+      <span lang="fr">Plan du jeu</span><span lang="en">Game plan</span><i></i>
+      <span lang="fr">Annuler en un clic</span><span lang="en">One-click undo</span><i></i>
+      <span lang="fr">Dictée vocale</span><span lang="en">Voice dictation</span><i></i>
+      <span lang="fr">Mode Équipe</span><span lang="en">Team mode</span><i></i>
+      <span lang="fr">Appli mobile</span><span lang="en">Mobile app</span><i></i>
+      <span lang="fr">Moins de tokens</span><span lang="en">Fewer tokens</span><i></i>
+      <span lang="fr">Agents en parallèle</span><span lang="en">Parallel agents</span><i></i>
+      <span lang="fr">Synchro Studio</span><span lang="en">Studio sync</span><i></i>
+      <span lang="fr">Plan du jeu</span><span lang="en">Game plan</span><i></i>
+      <span lang="fr">Annuler en un clic</span><span lang="en">One-click undo</span><i></i>
+      <span lang="fr">Dictée vocale</span><span lang="en">Voice dictation</span><i></i>
+      <span lang="fr">Mode Équipe</span><span lang="en">Team mode</span><i></i>
+      <span lang="fr">Appli mobile</span><span lang="en">Mobile app</span><i></i>
+      <span lang="fr">Moins de tokens</span><span lang="en">Fewer tokens</span><i></i>
     </div>
-    <img class="shot" src="img/home.webp" width="1440" height="900" loading="lazy" alt="L'accueil d'un jeu dans MEO Hub : ce qui attend une réponse, la prochaine étape du plan, les agents et la zone pour demander quelque chose.">
+  </div>
+
+  <!-- ============ VISITE DE L'APPLI ============ -->
+  <section class="tour" id="tour">
+    <div class="sec-head">
+      <h2><span lang="fr">Un vrai poste de commande, pas un chat de plus.</span><span lang="en">A real command center, not another chat box.</span></h2>
+      <p><span lang="fr">Chaque écran a un seul rôle : voir ce qui t'attend, suivre tes agents, écrire le plan, travailler à plusieurs.</span><span lang="en">Each screen has one job: see what needs you, follow your agents, write the plan, work together.</span></p>
+    </div>
+    <div class="tabs" role="tablist" aria-label="Écrans de MEO Hub">
+      <button role="tab" aria-selected="true" data-shot="agents"><span lang="fr">Agents</span><span lang="en">Agents</span></button>
+      <button role="tab" aria-selected="false" data-shot="home"><span lang="fr">Accueil du jeu</span><span lang="en">Game home</span></button>
+      <button role="tab" aria-selected="false" data-shot="plan"><span lang="fr">Plan du jeu</span><span lang="en">Game plan</span></button>
+      <button role="tab" aria-selected="false" data-shot="team"><span lang="fr">Équipe</span><span lang="en">Team</span></button>
+    </div>
+    <div class="screen">
+      <div class="screen-frame">
+        <img id="shot" src="img/agents.webp" width="1440" height="900" alt="MEO Hub : l'écran Agents">
+      </div>
+      <p class="caption" id="caption"></p>
+    </div>
   </section>
 
-  <section class="show" id="team">
-    <div class="show-text">
-      <h2><span lang="fr">À plusieurs sur le même jeu</span><span lang="en">Several people, one game</span></h2>
-      <p><span lang="fr">Crée ton équipe et invite tes devs. Le code de chaque jeu partagé se synchronise tout seul, vos agents savent ce que font ceux des autres, et vous discutez en direct.</span><span lang="en">Create your team and invite your devs. Each shared game's code syncs on its own, your agents know what the others' agents are doing, and you chat live.</span></p>
+  <!-- ============ FONCTIONS (grille) ============ -->
+  <section class="features" id="features">
+    <div class="sec-head">
+      <h2><span lang="fr">Tout ce qu'il faut pour sortir ton jeu.</span><span lang="en">Everything it takes to ship your game.</span></h2>
+    </div>
+    <div class="bento">
+      <article class="tile t-undo">
+        <div class="viz diff" aria-hidden="true"><p class="del">- local speed = 16</p><p class="add">+ local speed = 24</p><p class="add">+ local boost = true</p><span class="undo-btn">↶</span></div>
+        <h3><span lang="fr">Annuler un agent</span><span lang="en">Undo an agent</span></h3>
+        <p><span lang="fr">Tu vois exactement ce qu'il a modifié. Un clic, et ses fichiers reviennent comme avant, sans toucher au travail des autres.</span><span lang="en">See exactly what it changed. One click and its files are back, without touching anyone else's work.</span></p>
+      </article>
+      <article class="tile t-voice">
+        <div class="viz wave" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+        <h3><span lang="fr">Parle, il écrit</span><span lang="en">Talk, it types</span></h3>
+        <p><span lang="fr">Maintiens Ctrl+Espace : ta voix est transcrite sur ton PC, rien ne part en ligne.</span><span lang="en">Hold Ctrl+Space: your voice is transcribed on your PC, nothing goes online.</span></p>
+      </article>
+      <article class="tile t-plan">
+        <div class="viz tasks" aria-hidden="true"><p class="ok">Données joueurs</p><p class="ok">Hub et portails</p><p class="now">Boutique mobile</p><p>Œufs et raretés</p></div>
+        <h3><span lang="fr">Un plan que les agents suivent</span><span lang="en">A plan agents follow</span></h3>
+        <p><span lang="fr">Un assistant t'aide à écrire le plan du jeu. Les agents le lisent avant de coder et cochent ce qu'ils finissent.</span><span lang="en">An assistant helps you write the game plan. Agents read it before coding and tick off what they finish.</span></p>
+      </article>
+      <article class="tile t-tokens">
+        <div class="viz meter" aria-hidden="true"><span class="m-before"><i></i></span><span class="m-after"><i></i></span></div>
+        <h3><span lang="fr">Tes limites Claude durent plus</span><span lang="en">Your Claude limits last longer</span></h3>
+        <p><span lang="fr">Carte du code, mémoire du projet, missions suivies sans rien coûter : les agents lisent moins et devinent moins.</span><span lang="en">Code map, project memory, free mission tracking: agents read less and guess less.</span></p>
+      </article>
+      <article class="tile t-studio">
+        <div class="viz syncviz" aria-hidden="true"><span class="file">Shop.luau</span><span class="arrow"></span><span class="studio">Studio</span></div>
+        <h3><span lang="fr">Directement dans Studio</span><span lang="en">Straight into Studio</span></h3>
+        <p><span lang="fr">Le code part tout seul dans Roblox Studio, et les agents testent en jeu avec le connecteur officiel.</span><span lang="en">Code flows into Roblox Studio on its own, and agents playtest with the official connector.</span></p>
+      </article>
+      <article class="tile t-more">
+        <ul>
+          <li><span lang="fr">Versions automatiques</span><span lang="en">Automatic versions</span></li>
+          <li><span lang="fr">Vérification avant publication</span><span lang="en">Pre-release check</span></li>
+          <li><span lang="fr">Mes systèmes réutilisables</span><span lang="en">Reusable systems</span></li>
+          <li><span lang="fr">Images (Gemini) et 3D (Blender)</span><span lang="en">Images (Gemini) and 3D (Blender)</span></li>
+          <li><span lang="fr">Notes de mise à jour FR / EN</span><span lang="en">FR / EN update notes</span></li>
+          <li><span lang="fr">Demandes programmées</span><span lang="en">Scheduled requests</span></li>
+        </ul>
+      </article>
+    </div>
+  </section>
+
+  <!-- ============ ÉQUIPE ============ -->
+  <section class="team" id="team">
+    <div class="team-text">
+      <h2><span lang="fr">Ton studio, pas juste toi.</span><span lang="en">Your studio, not just you.</span></h2>
+      <p class="big"><span lang="fr">Invite tes devs, partagez un jeu, et vos agents se coordonnent entre vos PC.</span><span lang="en">Invite your devs, share a game, and your agents coordinate across your PCs.</span></p>
       <ul class="ticks">
-        <li><span lang="fr">Si deux personnes touchent les mêmes lignes, rien n'est perdu : un agent fusionne les deux versions.</span><span lang="en">If two people touch the same lines, nothing is lost: an agent merges both versions.</span></li>
-        <li><span lang="fr">Systèmes et actions rapides partagés d'un clic.</span><span lang="en">Systems and quick actions shared in one click.</span></li>
+        <li><span lang="fr">Le code se synchronise tout seul, dans un dépôt GitHub privé.</span><span lang="en">Code syncs on its own, in a private GitHub repo.</span></li>
+        <li><span lang="fr">Même ligne modifiée par deux personnes ? Rien n'est perdu, un agent fusionne.</span><span lang="en">Same line edited by two people? Nothing is lost, an agent merges.</span></li>
+        <li><span lang="fr">Discussion en direct, systèmes et actions partagés.</span><span lang="en">Live chat, shared systems and actions.</span></li>
         <li><span lang="fr">Une seule synchro Studio à la fois, pour ne pas se marcher dessus.</span><span lang="en">One Studio sync at a time, so nobody steps on anyone.</span></li>
       </ul>
     </div>
-    <img class="shot" src="img/team.webp" width="1440" height="900" loading="lazy" alt="L'onglet Équipe : la discussion à gauche, les membres et les partages à droite.">
-  </section>
-
-  <section class="mobile flip">
-    <div class="show-text">
-      <h2><span lang="fr">Ton téléphone devient la télécommande</span><span lang="en">Your phone becomes the remote</span></h2>
-      <p><span lang="fr">MEO Hub mobile suit tes agents depuis le canapé : autoriser, répondre, lancer une tâche, voir les changements. Sans appli à installer depuis un store : un QR code suffit.</span><span lang="en">MEO Hub mobile follows your agents from the couch: allow, reply, launch a task, review changes. No store app needed: a QR code is enough.</span></p>
+    <div class="team-visual" aria-hidden="true">
+      <div class="chat">
+        <p class="msg l"><b>Léa</b><span lang="fr">Je prends la boutique, tu gères les œufs ?</span><span lang="en">I'll take the shop, can you do the eggs?</span></p>
+        <p class="msg r"><b><span lang="fr">Toi</span><span lang="en">You</span></b><span lang="fr">Go. Mon Chef de projet lance les raretés.</span><span lang="en">Go. My project lead is on the rarities.</span></p>
+        <p class="event"><i></i><span lang="fr">Léa a envoyé 4 fichiers · code à jour</span><span lang="en">Léa sent 4 files · code up to date</span></p>
+        <p class="msg l"><b>Léa</b><span lang="fr">Mon agent voit le tien bosser sur EggService, il n'y touche pas 👌</span><span lang="en">My agent sees yours on EggService, it won't touch it 👌</span></p>
+      </div>
     </div>
-    <div class="phone"><img src="img/mobile.webp" width="390" height="844" loading="lazy" alt="MEO Hub mobile sur un téléphone : la discussion de l'équipe."></div>
   </section>
 
-  <!-- Tout le reste -->
-  <section class="more">
-    <h2><span lang="fr">Et tout ce qu'on attend d'un vrai atelier</span><span lang="en">And everything a real workshop needs</span></h2>
-    <dl class="more-list">
-      <div><dt><span lang="fr">Annuler un agent</span><span lang="en">Undo an agent</span></dt><dd><span lang="fr">Remet ses fichiers comme avant ta demande, sans toucher au travail des autres.</span><span lang="en">Puts its files back as they were before your request, without touching anyone else's work.</span></dd></div>
-      <div><dt><span lang="fr">Versions automatiques</span><span lang="en">Automatic versions</span></dt><dd><span lang="fr">Une sauvegarde toutes les 45 secondes, et un retour en arrière en un clic.</span><span lang="en">A save every 45 seconds, and one-click rollback.</span></dd></div>
-      <div><dt><span lang="fr">Dictée sur ton PC</span><span lang="en">Dictation on your PC</span></dt><dd><span lang="fr">Maintiens Ctrl+Espace et parle : la voix est transcrite sur ta machine, rien ne part en ligne.</span><span lang="en">Hold Ctrl+Space and talk: speech is transcribed on your machine, nothing goes online.</span></dd></div>
-      <div><dt><span lang="fr">Moins de tokens</span><span lang="en">Fewer tokens</span></dt><dd><span lang="fr">Carte du code, mémoire du projet et missions suivies sans rien coûter : tes limites Claude durent plus longtemps.</span><span lang="en">Code map, project memory and free mission tracking: your Claude limits last longer.</span></dd></div>
-      <div><dt><span lang="fr">Vérification avant publication</span><span lang="en">Pre-release check</span></dt><dd><span lang="fr">Repère les pertes de données, la triche possible, le lag et le code de test oublié, gratuitement.</span><span lang="en">Spots data loss, possible exploits, lag and leftover test code, for free.</span></dd></div>
-      <div><dt><span lang="fr">Mes systèmes</span><span lang="en">My systems</span></dt><dd><span lang="fr">Garde un système qui marche (sauvegarde, pets, boutique) et réutilise-le dans ton prochain jeu.</span><span lang="en">Keep a system that works (saving, pets, shop) and reuse it in your next game.</span></dd></div>
-      <div><dt><span lang="fr">Images et 3D</span><span lang="en">Images and 3D</span></dt><dd><span lang="fr">Gemini et Blender intégrés : tes agents peuvent mettre une image dans le jeu eux-mêmes.</span><span lang="en">Gemini and Blender built in: your agents can put an image into the game themselves.</span></dd></div>
-      <div><dt><span lang="fr">Notes de mise à jour</span><span lang="en">Update notes</span></dt><dd><span lang="fr">Écrites pour tes joueurs en français et en anglais, prêtes pour Discord.</span><span lang="en">Written for your players in French and English, ready for Discord.</span></dd></div>
-      <div><dt><span lang="fr">Demandes programmées</span><span lang="en">Scheduled requests</span></dt><dd><span lang="fr">Lance une tâche plus tard, par exemple quand ta limite Claude revient.</span><span lang="en">Run a task later, for example when your Claude limit resets.</span></dd></div>
-    </dl>
+  <!-- ============ MOBILE ============ -->
+  <section class="mobile">
+    <div class="phone-wrap"><div class="phone"><img src="img/mobile.webp" width="390" height="844" loading="lazy" alt="MEO Hub mobile : la discussion de l'équipe sur un téléphone."></div></div>
+    <div class="mobile-text">
+      <h2><span lang="fr">Ton téléphone devient la télécommande.</span><span lang="en">Your phone becomes the remote.</span></h2>
+      <p class="big"><span lang="fr">Autorise, réponds, lance une tâche ou vérifie un changement depuis ton canapé. Un QR code suffit, aucun store.</span><span lang="en">Allow, reply, launch a task or review a change from your couch. A QR code is all it takes, no app store.</span></p>
+    </div>
   </section>
 
-  <!-- Ce qu'il te faut -->
+  <!-- ============ CE QU'IL TE FAUT ============ -->
   <section class="needs">
     <h2><span lang="fr">Ce qu'il te faut</span><span lang="en">What you need</span></h2>
-    <ul>
-      <li><b><span lang="fr">Un PC Windows 10 ou 11.</span><span lang="en">A Windows 10 or 11 PC.</span></b></li>
-      <li><b><span lang="fr">Ton propre abonnement Claude</span><span lang="en">Your own Claude subscription</span></b> <span lang="fr">(Pro ou Max). Les agents l'utilisent : MEO Hub ne revend pas d'accès à Claude.</span><span lang="en">(Pro or Max). The agents use it: MEO Hub does not resell Claude access.</span></li>
-      <li><b>Roblox Studio</b><span lang="fr">, avec son connecteur MCP (MEO Hub t'aide à l'installer).</span><span lang="en">, with its MCP connector (MEO Hub helps you set it up).</span></li>
-    </ul>
-  </section>
-
-  <!-- Prix -->
-  <section class="price" id="price">
-    <div class="price-box">
-      <h2><span lang="fr">Une licence, pour toujours</span><span lang="en">One licence, forever</span></h2>
-      <p class="amount" data-price></p>
-      <p class="muted"><span lang="fr">Paiement unique. Toutes les mises à jour comprises.</span><span lang="en">One-time payment. All updates included.</span></p>
-      <ul class="ticks">
-        <li><span lang="fr">MEO Hub sur ton PC, avec toutes ses fonctions</span><span lang="en">MEO Hub on your PC, with every feature</span></li>
-        <li><span lang="fr">MEO Hub mobile</span><span lang="en">MEO Hub mobile</span></li>
-        <li><span lang="fr">Le mode Équipe (chaque membre a sa licence)</span><span lang="en">Team mode (each member has their own licence)</span></li>
-        <li><span lang="fr">Ta clé arrive par email juste après l'achat</span><span lang="en">Your key arrives by email right after purchase</span></li>
-      </ul>
-      <a class="btn buy big" id="buy" href="#"><span lang="fr">Acheter MEO Hub</span><span lang="en">Buy MEO Hub</span></a>
-      <p class="fine" id="buy-soon" hidden><span lang="fr">La vente ouvre très bientôt.</span><span lang="en">Sales open very soon.</span></p>
+    <div class="needs-row">
+      <p><b>Windows 10 / 11</b><span lang="fr">Un PC, rien d'autre à installer à la main.</span><span lang="en">A PC, nothing else to install by hand.</span></p>
+      <p><b><span lang="fr">Ton abonnement Claude</span><span lang="en">Your Claude plan</span></b><span lang="fr">Pro ou Max. Les agents l'utilisent, MEO Hub ne revend pas d'accès.</span><span lang="en">Pro or Max. The agents use it, MEO Hub doesn't resell access.</span></p>
+      <p><b>Roblox Studio</b><span lang="fr">Avec son connecteur, que MEO Hub t'aide à installer.</span><span lang="en">With its connector, which MEO Hub helps you set up.</span></p>
     </div>
   </section>
 
-  <!-- FAQ -->
+  <!-- ============ PRIX ============ -->
+  <section class="price" id="price">
+    <div class="price-card">
+      <div class="price-left">
+        <h2><span lang="fr">Une licence. Pour toujours.</span><span lang="en">One licence. Forever.</span></h2>
+        <p class="amount" data-price></p>
+        <p class="muted"><span lang="fr">Paiement unique, toutes les mises à jour comprises.</span><span lang="en">One-time payment, every update included.</span></p>
+        <a class="btn buy big" id="buy" href="#"><span lang="fr">Acheter MEO Hub</span><span lang="en">Buy MEO Hub</span></a>
+        <p class="fine" id="buy-soon" hidden><span lang="fr">La vente ouvre très bientôt.</span><span lang="en">Sales open very soon.</span></p>
+      </div>
+      <ul class="ticks price-list">
+        <li><span lang="fr">MEO Hub sur ton PC, toutes les fonctions</span><span lang="en">MEO Hub on your PC, every feature</span></li>
+        <li><span lang="fr">MEO Hub mobile</span><span lang="en">MEO Hub mobile</span></li>
+        <li><span lang="fr">Le mode Équipe (une licence par membre)</span><span lang="en">Team mode (one licence per member)</span></li>
+        <li><span lang="fr">Toutes les mises à jour futures</span><span lang="en">Every future update</span></li>
+        <li><span lang="fr">Ta clé par email, juste après l'achat</span><span lang="en">Your key by email, right after purchase</span></li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ============ FAQ ============ -->
   <section class="faq" id="faq">
     <h2>FAQ</h2>
-    <details><summary><span lang="fr">Est-ce que je dois savoir coder ?</span><span lang="en">Do I need to know how to code?</span></summary>
-      <p><span lang="fr">Non. Tu décris ce que tu veux, les agents écrivent le code. Savoir lire un peu de Luau aide à vérifier, mais ce n'est pas obligatoire.</span><span lang="en">No. You describe what you want, the agents write the code. Reading a bit of Luau helps you check, but it isn't required.</span></p></details>
-    <details><summary><span lang="fr">Pourquoi faut-il mon propre abonnement Claude ?</span><span lang="en">Why do I need my own Claude subscription?</span></summary>
-      <p><span lang="fr">MEO Hub pilote Claude Code avec ton compte. Tu gardes la main sur tes limites et ton abonnement, et MEO Hub n'a jamais accès à tes identifiants Claude.</span><span lang="en">MEO Hub drives Claude Code with your account. You keep control of your limits and subscription, and MEO Hub never sees your Claude credentials.</span></p></details>
-    <details><summary><span lang="fr">Est-ce que ça marche sur Mac ?</span><span lang="en">Does it work on Mac?</span></summary>
-      <p><span lang="fr">Pas encore : MEO Hub est fait pour Windows 10 et 11.</span><span lang="en">Not yet: MEO Hub is built for Windows 10 and 11.</span></p></details>
-    <details><summary><span lang="fr">Mon code reste à moi ?</span><span lang="en">Does my code stay mine?</span></summary>
-      <p><span lang="fr">Oui. Ton jeu est un dossier sur ton PC. En mode Équipe, il est rangé dans un dépôt GitHub privé, sur ton compte.</span><span lang="en">Yes. Your game is a folder on your PC. In Team mode, it lives in a private GitHub repository, on your account.</span></p></details>
-    <details><summary><span lang="fr">Combien de PC avec une licence ?</span><span lang="en">How many PCs per licence?</span></summary>
-      <p><span lang="fr">La licence est liée à ton compte MEO Hub : connecte-toi sur ton PC fixe ou ton portable. Pour une équipe, chaque membre a sa propre licence.</span><span lang="en">The licence is tied to your MEO Hub account: sign in on your desktop or your laptop. In a team, each member has their own licence.</span></p></details>
-    <details><summary><span lang="fr">Et si ça ne me convient pas ?</span><span lang="en">What if it isn't right for me?</span></summary>
-      <p><span lang="fr">Écris-nous dans les 14 jours suivant l'achat : on te rembourse.</span><span lang="en">Write to us within 14 days of purchase and we'll refund you.</span></p></details>
+    <div class="faq-grid">
+      <details><summary><span lang="fr">Est-ce que je dois savoir coder ?</span><span lang="en">Do I need to know how to code?</span></summary>
+        <p><span lang="fr">Non. Tu décris ce que tu veux, les agents écrivent le code. Lire un peu de Luau aide à vérifier, sans être obligatoire.</span><span lang="en">No. You describe what you want, the agents write the code. Reading a bit of Luau helps you check, but isn't required.</span></p></details>
+      <details><summary><span lang="fr">Pourquoi mon propre abonnement Claude ?</span><span lang="en">Why my own Claude subscription?</span></summary>
+        <p><span lang="fr">MEO Hub pilote Claude Code avec ton compte : tu gardes la main sur tes limites, et MEO Hub ne voit jamais tes identifiants Claude.</span><span lang="en">MEO Hub drives Claude Code with your account: you control your limits, and MEO Hub never sees your Claude credentials.</span></p></details>
+      <details><summary><span lang="fr">Ça marche sur Mac ?</span><span lang="en">Does it work on Mac?</span></summary>
+        <p><span lang="fr">Pas encore : MEO Hub est fait pour Windows 10 et 11.</span><span lang="en">Not yet: MEO Hub is built for Windows 10 and 11.</span></p></details>
+      <details><summary><span lang="fr">Mon code reste à moi ?</span><span lang="en">Does my code stay mine?</span></summary>
+        <p><span lang="fr">Oui. Ton jeu est un dossier sur ton PC. En mode Équipe, il vit dans un dépôt GitHub privé, sur ton compte.</span><span lang="en">Yes. Your game is a folder on your PC. In Team mode, it lives in a private GitHub repo, on your account.</span></p></details>
+      <details><summary><span lang="fr">Combien de PC par licence ?</span><span lang="en">How many PCs per licence?</span></summary>
+        <p><span lang="fr">La licence suit ton compte MEO Hub : PC fixe ou portable. En équipe, chaque membre a la sienne.</span><span lang="en">The licence follows your MEO Hub account: desktop or laptop. In a team, each member has their own.</span></p></details>
+      <details><summary><span lang="fr">Et si ça ne me convient pas ?</span><span lang="en">What if it isn't for me?</span></summary>
+        <p><span lang="fr">Écris-nous dans les 14 jours suivant l'achat : on te rembourse.</span><span lang="en">Write to us within 14 days of purchase and we'll refund you.</span></p></details>
+    </div>
+  </section>
+
+  <!-- ============ DERNIER APPEL ============ -->
+  <section class="final">
+    <h2><span lang="fr">Ton prochain jeu commence ici.</span><span lang="en">Your next game starts here.</span></h2>
+    <a class="btn buy" href="#price"><span lang="fr">Acheter MEO Hub</span><span lang="en">Get MEO Hub</span><b data-price></b></a>
   </section>
 </main>
 
@@ -189,9 +254,9 @@
     <a href="legal.html#mentions"><span lang="fr">Mentions légales</span><span lang="en">Legal notice</span></a>
     <a href="legal.html#cgv"><span lang="fr">Conditions de vente</span><span lang="en">Terms of sale</span></a>
     <a href="legal.html#confidentialite"><span lang="fr">Confidentialité</span><span lang="en">Privacy</span></a>
-    <a data-contact href="#"><span lang="fr">Contact</span><span lang="en">Contact</span></a>
+    <a data-contact href="#">Contact</a>
   </nav>
-  <p class="fine"><span lang="fr">MEO Hub n'est ni affilié à Roblox Corporation ni à Anthropic. Roblox et Claude sont des marques de leurs propriétaires.</span><span lang="en">MEO Hub is not affiliated with Roblox Corporation or Anthropic. Roblox and Claude are trademarks of their respective owners.</span></p>
+  <p class="fine"><span lang="fr">MEO Hub n'est affilié ni à Roblox Corporation ni à Anthropic. Roblox et Claude sont des marques de leurs propriétaires.</span><span lang="en">MEO Hub is not affiliated with Roblox Corporation or Anthropic. Roblox and Claude are trademarks of their respective owners.</span></p>
 </footer>
 
 <script src="site.js"></script>
