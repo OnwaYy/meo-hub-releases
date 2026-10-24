@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Nouveau mot de passe · MEO Hub</title>
+<meta name="robots" content="noindex">
+<meta name="referrer" content="no-referrer">
+<link rel="icon" href="img/favicon.png">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&family=Figtree:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="style.css?v=4">
+<style>
+  .rs { max-width: 440px; margin: 0 auto; padding: 140px 20px 80px; }
+  .rs-card { padding: 30px; border-radius: 22px; border: 1px solid var(--line); background: rgba(16, 20, 44, .7); }
+  .rs h1 { font: 800 30px var(--display); margin: 0 0 8px; }
+  .rs p { color: #bcc3e6; margin: 0 0 20px; }
+  .rs label { display: block; font-weight: 600; font-size: 14px; margin: 0 0 14px; color: #d7dcf5; }
+  .rs input { display: block; width: 100%; box-sizing: border-box; margin-top: 6px; padding: 13px 14px; border-radius: 12px; border: 1px solid var(--line); background: #0b0e22; color: var(--text); font: 500 16px var(--body); }
+  .rs input:focus { outline: none; border-color: var(--blue); }
+  .rs .btn { width: 100%; justify-content: center; margin-top: 6px; }
+  .rs-msg { min-height: 22px; margin: 14px 0 0 !important; font-weight: 600; }
+  .rs-msg.err { color: #ff8a7a; } .rs-msg.ok { color: var(--ok); }
+</style>
+</head>
+<body>
+<header class="nav solid">
+  <a class="brand" href="index.html"><img src="img/logo-256.png" alt="" width="34" height="34"><span>MEO Hub</span></a>
+</header>
+<main class="rs">
+  <div class="rs-card">
+    <h1 id="t">Nouveau mot de passe</h1>
+    <p id="d">Choisis ton nouveau mot de passe MEO Hub.</p>
+    <form id="f" hidden>
+      <label><span id="l1">Nouveau mot de passe</span><input id="p1" type="password" minlength="6" required autocomplete="new-password"></label>
+      <label><span id="l2">Confirme le mot de passe</span><input id="p2" type="password" minlength="6" required autocomplete="new-password"></label>
+      <button class="btn buy" type="submit" id="b">Enregistrer</button>
+    </form>
+    <p class="rs-msg" id="m"></p>
+  </div>
+</main>
+<script>
+(() => {
+  // Clé publique (publishable) : c'est celle qui est déjà dans l'appli
+  const SB = 'https://rbthdyzaomiltdtyxpaw.supabase.co';
+  const KEY = 'sb_publishable_B1clYdJvm550ZwcmPuXUMA_NLgO6mNi';
+  let en = false; try { en = localStorage.getItem('meo-lang') === 'en' || (!localStorage.getItem('meo-lang') && !/^fr/i.test(navigator.language)); } catch {}
+  const T = en ? {
+    t: 'New password', d: 'Choose your new MEO Hub password.', l1: 'New password', l2: 'Confirm password', b: 'Save',
+    bad: 'This link has expired or was already used. In MEO Hub, click "Forgot password?" again.',
+    diff: 'The two passwords don\'t match.', short: 'At least 6 characters.', saving: 'Saving…',
+    same: 'Choose a password different from the old one.', net: 'Can\'t reach the server. Check your connection.',
+    done: 'Password changed! Go back to MEO Hub and sign in with it.'
+  } : {
+    t: 'Nouveau mot de passe', d: 'Choisis ton nouveau mot de passe MEO Hub.', l1: 'Nouveau mot de passe', l2: 'Confirme le mot de passe', b: 'Enregistrer',
+    bad: 'Ce lien a expiré ou a déjà servi. Dans MEO Hub, clique de nouveau sur « Mot de passe oublié ? ».',
+    diff: 'Les deux mots de passe ne sont pas identiques.', short: 'Au moins 6 caractères.', saving: 'Enregistrement…',
+    same: 'Choisis un mot de passe différent de l\'ancien.', net: 'Impossible de joindre le serveur. Vérifie ta connexion.',
+    done: 'Mot de passe changé ! Retourne dans MEO Hub et connecte-toi avec.'
+  };
+  document.documentElement.lang = en ? 'en' : 'fr';
+  for (const id of ['t', 'd', 'l1', 'l2', 'b']) document.getElementById(id).textContent = T[id];
+  const $ = (id) => document.getElementById(id);
+  const say = (txt, kind) => { $('m').textContent = txt; $('m').className = 'rs-msg ' + (kind || ''); };
+
+  // Le lien de l'email arrive avec #access_token=…&type=recovery (ou #error=… s'il a expiré)
+  const h = new URLSearchParams(location.hash.slice(1));
+  const token = h.get('type') === 'recovery' ? h.get('access_token') : null;
+  history.replaceState(null, '', location.pathname); // on retire le jeton de l'adresse
+  if (!token) { $('d').hidden = true; return say(T.bad, 'err'); }
+  $('f').hidden = false; $('p1').focus();
+
+  $('f').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const p = $('p1').value;
+    if (p.length < 6) return say(T.short, 'err');
+    if (p !== $('p2').value) return say(T.diff, 'err');
+    say(T.saving); $('b').disabled = true;
+    try {
+      const r = await fetch(SB + '/auth/v1/user', { method: 'PUT', headers: { apikey: KEY, Authorization: 'Bearer ' + token, 'Content-Type': 'application/json' }, body: JSON.stringify({ password: p }) });
+      if (r.ok) { $('f').hidden = true; $('d').hidden = true; return say(T.done, 'ok'); }
+      const j = await r.json().catch(() => ({}));
+      const msg = String(j.msg || j.message || j.error_description || '');
+      say(/different from the old/i.test(msg) ? T.same : /expired|invalid|jwt/i.test(msg) || r.status === 401 || r.status === 403 ? T.bad : (msg || T.bad), 'err');
+    } catch { say(T.net, 'err'); }
+    $('b').disabled = false;
+  });
+})();
+</script>
+</body>
+</html>
