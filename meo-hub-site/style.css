@@ -342,3 +342,11 @@ h3 { font: 700 21px/1.25 var(--display); margin: 0 0 8px; letter-spacing: -.015e
   .foot { grid-template-columns: 1fr; }
   .track { font-size: 18px; }
 }
+
+.not-ai { margin: 10px auto 0; font-size: 14.5px; color: #ffb27a; font-weight: 600; }
+.not-ai-box { margin: 0 0 22px; padding: 22px 24px; border-radius: 18px; border: 1px solid rgba(255,122,47,.35); background: linear-gradient(120deg, rgba(255,122,47,.10), rgba(143,107,255,.08)); }
+.not-ai-box b { display: block; font: 800 22px var(--display); color: var(--text); margin-bottom: 8px; }
+.not-ai-box p { margin: 0; color: #c8cdee; font-size: 16px; max-width: 62em; }
+.price-list li.no { color: #9aa1c7; }
+.price-list li.no::before { background: rgba(255,122,47,.15); }
+.price-list li.no::after { content: 'i'; border: 0; transform: none; left: 0; top: .2em; width: 20px; height: 20px; text-align: center; font: 700 13px/20px var(--display); color: var(--flame); }
