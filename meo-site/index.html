@@ -1,0 +1,331 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cubit · l'atelier de vibe coding pour Roblox</title>
+<meta name="description" content="Cubit fait travailler plusieurs agents Claude Code sur ton jeu Roblox en même temps : plan du jeu, synchro avec Studio, annuler, mode équipe et appli mobile.">
+<meta property="og:title" content="Cubit · Arrête de copier-coller. Dirige une équipe.">
+<meta property="og:description" content="Plusieurs agents Claude Code sur ton jeu Roblox, en même temps. Tu diriges, ils codent.">
+<meta property="og:image" content="img/agents.webp">
+<meta name="theme-color" content="#070917">
+<link rel="icon" href="img/favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Figtree:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<link rel="stylesheet" href="style.css?v=5">
+</head>
+<body>
+<a class="skip" href="#main"><span lang="fr">Aller au contenu</span><span lang="en">Skip to content</span></a>
+
+<header class="nav" id="nav">
+  <a class="brand" href="#top" aria-label="Cubit">
+    <img src="img/logo-256.png" alt="" width="36" height="36"><span>Cubit</span>
+  </a>
+  <nav class="nav-links" aria-label="Sections">
+    <a href="#tour"><span lang="fr">L'appli</span><span lang="en">The app</span></a>
+    <a href="#try"><span lang="fr">Essayer</span><span lang="en">Try it</span></a>
+    <a href="#features"><span lang="fr">Fonctions</span><span lang="en">Features</span></a>
+    <a href="#team"><span lang="fr">Équipe</span><span lang="en">Teams</span></a>
+    <a href="#check"><span lang="fr">Mon PC</span><span lang="en">My PC</span></a>
+    <a href="#price"><span lang="fr">Prix</span><span lang="en">Pricing</span></a>
+    <a href="#faq">FAQ</a>
+  </nav>
+  <div class="nav-end">
+    <button class="lang" id="lang" type="button" aria-label="Changer de langue / Change language"><span lang="fr">EN</span><span lang="en">FR</span></button>
+    <a class="btn buy small" href="#price"><span lang="fr">Acheter</span><span lang="en">Buy</span></a>
+  </div>
+</header>
+
+<main id="main">
+  <!-- ============ HÉROS : la démo vivante ============ -->
+  <section class="hero" id="top">
+    <div class="hero-glow" aria-hidden="true"></div>
+    <canvas class="embers" id="embers" aria-hidden="true"></canvas>
+    <div class="hero-head">
+      <p class="kicker"><img src="img/logo-256.png" alt="" width="22" height="22"><span lang="fr">Pour Roblox Studio, avec Claude Code</span><span lang="en">For Roblox Studio, with Claude Code</span></p>
+      <h1>
+        <span lang="fr"><span class="h1-a">Arrête de copier-coller.</span><span class="h1-b">Dirige une équipe.</span></span>
+        <span lang="en"><span class="h1-a">Stop copy-pasting.</span><span class="h1-b">Run a team.</span></span>
+      </h1>
+      <p class="lead">
+        <span lang="fr">Cubit fait travailler plusieurs agents IA sur ton jeu Roblox en même temps. Un Chef de projet découpe, des spécialistes codent, le code part tout seul dans Studio. Toi, tu valides.</span>
+        <span lang="en">Cubit puts several AI agents to work on your Roblox game at once. A project lead splits the work, specialists code it, and it flows straight into Studio. You just approve.</span>
+      </p>
+      <div class="hero-cta">
+        <a class="btn buy" href="#price"><span lang="fr">Acheter Cubit</span><span lang="en">Get Cubit</span><b data-price></b></a>
+        <a class="btn glass" href="#check"><span lang="fr">Tester mon PC gratuitement</span><span lang="en">Test my PC for free</span></a>
+      </div>
+      <p class="fine"><span lang="fr">Windows 10 et 11 · paiement unique · mises à jour comprises</span><span lang="en">Windows 10 and 11 · one-time payment · updates included</span></p>
+      <p class="not-ai"><span lang="fr">On ne vend pas une IA : on vend le logiciel qui exploite ton Claude à son plein potentiel.</span><span lang="en">We don't sell an AI: we sell the software that pushes your Claude to its full potential.</span></p>
+    </div>
+
+    <!-- La démo : des agents qui travaillent vraiment (animation, pas une vidéo) -->
+    <div class="stage" aria-label="Démonstration : trois agents travaillent en même temps sur un jeu Roblox">
+      <div class="baseplate" aria-hidden="true"></div>
+      <div class="board" id="board">
+        <div class="board-top">
+          <span class="dots"><i></i><i></i><i></i></span>
+          <b>Pet Sim</b>
+          <span class="pill sync" id="sync-pill"><i></i><span lang="fr">Synchro Studio</span><span lang="en">Studio sync</span> <em id="sync-count">0</em></span>
+          <span class="pill usage"><span lang="fr">Claude</span><span lang="en">Claude</span> <em>42 %</em></span>
+        </div>
+        <div class="lanes">
+          <article class="lane" data-lane="0"><header><i class="st"></i><div><b><span lang="fr">Chef de projet</span><span lang="en">Project lead</span></b><span class="say"></span></div></header><div class="perm" hidden><span lang="fr">Lancer <code>rojo build</code> ?</span><span lang="en">Run <code>rojo build</code>?</span><button tabindex="-1"><span lang="fr">Autoriser</span><span lang="en">Allow</span></button></div><pre class="out"></pre></article>
+          <article class="lane" data-lane="1"><header><i class="st"></i><div><b><span lang="fr">Interface</span><span lang="en">UI</span></b><span class="say"></span></div></header><pre class="out"></pre></article>
+          <article class="lane" data-lane="2"><header><i class="st"></i><div><b><span lang="fr">Testeur</span><span lang="en">Tester</span></b><span class="say"></span></div></header><pre class="out"></pre></article>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ BANDEAU ============ -->
+  <div class="marquee" aria-hidden="true">
+    <div class="track">
+      <span lang="fr">Agents en parallèle</span><span lang="en">Parallel agents</span><i></i>
+      <span lang="fr">Synchro Studio</span><span lang="en">Studio sync</span><i></i>
+      <span lang="fr">Plan du jeu</span><span lang="en">Game plan</span><i></i>
+      <span lang="fr">Annuler en un clic</span><span lang="en">One-click undo</span><i></i>
+      <span lang="fr">Dictée vocale</span><span lang="en">Voice dictation</span><i></i>
+      <span lang="fr">Mode Équipe</span><span lang="en">Team mode</span><i></i>
+      <span lang="fr">Appli mobile</span><span lang="en">Mobile app</span><i></i>
+      <span lang="fr">Moins de tokens</span><span lang="en">Fewer tokens</span><i></i>
+      <span lang="fr">Agents en parallèle</span><span lang="en">Parallel agents</span><i></i>
+      <span lang="fr">Synchro Studio</span><span lang="en">Studio sync</span><i></i>
+      <span lang="fr">Plan du jeu</span><span lang="en">Game plan</span><i></i>
+      <span lang="fr">Annuler en un clic</span><span lang="en">One-click undo</span><i></i>
+      <span lang="fr">Dictée vocale</span><span lang="en">Voice dictation</span><i></i>
+      <span lang="fr">Mode Équipe</span><span lang="en">Team mode</span><i></i>
+      <span lang="fr">Appli mobile</span><span lang="en">Mobile app</span><i></i>
+      <span lang="fr">Moins de tokens</span><span lang="en">Fewer tokens</span><i></i>
+    </div>
+  </div>
+
+  <!-- ============ ESSAI : donne une tâche ============ -->
+  <section class="try" id="try">
+    <div class="sec-head">
+      <h2><span lang="fr">Donne-lui une tâche.</span><span lang="en">Give it a task.</span></h2>
+      <p><span lang="fr">Choisis une demande ou écris la tienne : regarde le Chef de projet la découper et la répartir entre ses spécialistes.</span><span lang="en">Pick a request or write your own: watch the project lead split it and hand it to specialists.</span></p>
+    </div>
+    <div class="try-box">
+      <div class="try-ask">
+        <div class="chips" id="try-chips">
+          <button type="button" data-task="shop"><span lang="fr">Ajoute une boutique avec 2 gamepasses</span><span lang="en">Add a shop with 2 gamepasses</span></button>
+          <button type="button" data-task="eggs"><span lang="fr">Crée des œufs avec des raretés</span><span lang="en">Create eggs with rarities</span></button>
+          <button type="button" data-task="lag"><span lang="fr">Le jeu lag sur mobile, corrige</span><span lang="en">The game lags on mobile, fix it</span></button>
+        </div>
+        <form class="try-form" id="try-form">
+          <input id="try-text" maxlength="90" autocomplete="off" aria-label="Ta demande" placeholder="">
+          <button class="btn buy small" type="submit"><span lang="fr">Lancer</span><span lang="en">Run</span></button>
+        </form>
+      </div>
+      <div class="try-run" id="try-run"><p class="try-empty"><span lang="fr">Choisis une tâche pour lancer la démo.</span><span lang="en">Pick a task to start the demo.</span></p></div>
+    </div>
+  </section>
+
+  <!-- ============ VISITE DE L'APPLI ============ -->
+  <section class="tour" id="tour">
+    <div class="sec-head">
+      <h2><span lang="fr">Un vrai poste de commande, pas un chat de plus.</span><span lang="en">A real command center, not another chat box.</span></h2>
+      <p><span lang="fr">Chaque écran a un seul rôle : voir ce qui t'attend, suivre tes agents, écrire le plan, travailler à plusieurs.</span><span lang="en">Each screen has one job: see what needs you, follow your agents, write the plan, work together.</span></p>
+    </div>
+    <div class="tabs" role="tablist" aria-label="Écrans de Cubit">
+      <button role="tab" aria-selected="true" data-shot="agents"><span lang="fr">Agents</span><span lang="en">Agents</span></button>
+      <button role="tab" aria-selected="false" data-shot="home"><span lang="fr">Accueil du jeu</span><span lang="en">Game home</span></button>
+      <button role="tab" aria-selected="false" data-shot="plan"><span lang="fr">Plan du jeu</span><span lang="en">Game plan</span></button>
+      <button role="tab" aria-selected="false" data-shot="team"><span lang="fr">Équipe</span><span lang="en">Team</span></button>
+    </div>
+    <div class="screen">
+      <div class="screen-frame">
+        <img id="shot" src="img/agents.webp" width="1440" height="900" alt="Cubit : l'écran Agents">
+      </div>
+      <p class="caption" id="caption"></p>
+    </div>
+  </section>
+
+  <!-- ============ FONCTIONS (grille) ============ -->
+  <section class="features" id="features">
+    <div class="sec-head">
+      <h2><span lang="fr">Tout ce qu'il faut pour sortir ton jeu.</span><span lang="en">Everything it takes to ship your game.</span></h2>
+    </div>
+    <div class="bento">
+      <article class="tile t-undo">
+        <div class="viz diff" aria-hidden="true"><p class="del">- local speed = 16</p><p class="add">+ local speed = 24</p><p class="add">+ local boost = true</p><span class="undo-btn">↶</span></div>
+        <h3><span lang="fr">Annuler un agent</span><span lang="en">Undo an agent</span></h3>
+        <p><span lang="fr">Tu vois exactement ce qu'il a modifié. Un clic, et ses fichiers reviennent comme avant, sans toucher au travail des autres.</span><span lang="en">See exactly what it changed. One click and its files are back, without touching anyone else's work.</span></p>
+      </article>
+      <article class="tile t-voice">
+        <div class="viz wave" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+        <h3><span lang="fr">Parle, il écrit</span><span lang="en">Talk, it types</span></h3>
+        <p><span lang="fr">Maintiens Ctrl+Espace : ta voix est transcrite sur ton PC, rien ne part en ligne.</span><span lang="en">Hold Ctrl+Space: your voice is transcribed on your PC, nothing goes online.</span></p>
+      </article>
+      <article class="tile t-plan">
+        <div class="viz tasks" aria-hidden="true"><p class="ok">Données joueurs</p><p class="ok">Hub et portails</p><p class="now">Boutique mobile</p><p>Œufs et raretés</p></div>
+        <h3><span lang="fr">Un plan que les agents suivent</span><span lang="en">A plan agents follow</span></h3>
+        <p><span lang="fr">Un assistant t'aide à écrire le plan du jeu. Les agents le lisent avant de coder et cochent ce qu'ils finissent.</span><span lang="en">An assistant helps you write the game plan. Agents read it before coding and tick off what they finish.</span></p>
+      </article>
+      <article class="tile t-tokens">
+        <div class="viz meter" aria-hidden="true"><span class="m-before"><i></i></span><span class="m-after"><i></i></span></div>
+        <h3><span lang="fr">Tes limites Claude durent plus</span><span lang="en">Your Claude limits last longer</span></h3>
+        <p><span lang="fr">Carte du code, mémoire du projet, missions suivies sans rien coûter : les agents lisent moins et devinent moins.</span><span lang="en">Code map, project memory, free mission tracking: agents read less and guess less.</span></p>
+      </article>
+      <article class="tile t-studio">
+        <div class="viz syncviz" aria-hidden="true"><span class="file">Shop.luau</span><span class="arrow"></span><span class="studio">Studio</span></div>
+        <h3><span lang="fr">Directement dans Studio</span><span lang="en">Straight into Studio</span></h3>
+        <p><span lang="fr">Le code part tout seul dans Roblox Studio, et les agents testent en jeu avec le connecteur officiel.</span><span lang="en">Code flows into Roblox Studio on its own, and agents playtest with the official connector.</span></p>
+      </article>
+      <article class="tile t-more">
+        <ul>
+          <li><span lang="fr">Versions automatiques</span><span lang="en">Automatic versions</span></li>
+          <li><span lang="fr">Vérification avant publication</span><span lang="en">Pre-release check</span></li>
+          <li><span lang="fr">Mes systèmes réutilisables</span><span lang="en">Reusable systems</span></li>
+          <li><span lang="fr">Images (Gemini) et 3D (Blender)</span><span lang="en">Images (Gemini) and 3D (Blender)</span></li>
+          <li><span lang="fr">Notes de mise à jour FR / EN</span><span lang="en">FR / EN update notes</span></li>
+          <li><span lang="fr">Demandes programmées</span><span lang="en">Scheduled requests</span></li>
+        </ul>
+      </article>
+    </div>
+  </section>
+
+  <!-- ============ ÉQUIPE ============ -->
+  <section class="team" id="team">
+    <div class="team-text">
+      <h2><span lang="fr">Ton studio, pas juste toi.</span><span lang="en">Your studio, not just you.</span></h2>
+      <p class="big"><span lang="fr">Invite tes devs, partagez un jeu, et vos agents se coordonnent entre vos PC.</span><span lang="en">Invite your devs, share a game, and your agents coordinate across your PCs.</span></p>
+      <ul class="ticks">
+        <li><span lang="fr">Le code se synchronise tout seul, dans un dépôt GitHub privé.</span><span lang="en">Code syncs on its own, in a private GitHub repo.</span></li>
+        <li><span lang="fr">Même ligne modifiée par deux personnes ? Rien n'est perdu, un agent fusionne.</span><span lang="en">Same line edited by two people? Nothing is lost, an agent merges.</span></li>
+        <li><span lang="fr">Discussion en direct, systèmes et actions partagés.</span><span lang="en">Live chat, shared systems and actions.</span></li>
+        <li><span lang="fr">Une seule synchro Studio à la fois, pour ne pas se marcher dessus.</span><span lang="en">One Studio sync at a time, so nobody steps on anyone.</span></li>
+      </ul>
+    </div>
+    <div class="team-visual" aria-hidden="true">
+      <div class="chat">
+        <p class="msg l"><b>Léa</b><span lang="fr">Je prends la boutique, tu gères les œufs ?</span><span lang="en">I'll take the shop, can you do the eggs?</span></p>
+        <p class="msg r"><b><span lang="fr">Toi</span><span lang="en">You</span></b><span lang="fr">Go. Mon Chef de projet lance les raretés.</span><span lang="en">Go. My project lead is on the rarities.</span></p>
+        <p class="event"><i></i><span lang="fr">Léa a envoyé 4 fichiers · code à jour</span><span lang="en">Léa sent 4 files · code up to date</span></p>
+        <p class="msg l"><b>Léa</b><span lang="fr">Mon agent voit le tien bosser sur EggService, il n'y touche pas 👌</span><span lang="en">My agent sees yours on EggService, it won't touch it 👌</span></p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ MOBILE ============ -->
+  <section class="mobile">
+    <div class="phone-wrap"><div class="phone"><img src="img/mobile.webp" width="390" height="844" loading="lazy" alt="Cubit mobile : la discussion de l'équipe sur un téléphone."></div></div>
+    <div class="mobile-text">
+      <h2><span lang="fr">Ton téléphone devient la télécommande.</span><span lang="en">Your phone becomes the remote.</span></h2>
+      <p class="big"><span lang="fr">Autorise, réponds, lance une tâche ou vérifie un changement depuis ton canapé. Un QR code suffit, aucun store.</span><span lang="en">Allow, reply, launch a task or review a change from your couch. A QR code is all it takes, no app store.</span></p>
+    </div>
+  </section>
+
+  <!-- ============ TON PC ============ -->
+  <section class="check" id="check">
+    <div class="check-text">
+      <h2><span lang="fr">Ton PC est-il prêt ?</span><span lang="en">Is your PC ready?</span></h2>
+      <p class="big"><span lang="fr">Trois clics pour une estimation. Pour un vrai diagnostic, télécharge Cubit : son test de PC est gratuit, même sans licence.</span><span lang="en">Three clicks for an estimate. For a real diagnosis, download Cubit: its PC test is free, even without a licence.</span></p>
+      <div class="check-q">
+        <p><span lang="fr">Mémoire</span><span lang="en">Memory</span></p>
+        <div class="seg" data-q="ram"><button data-v="8">8 Go</button><button data-v="16" aria-pressed="true">16 Go</button><button data-v="32">32 Go +</button></div>
+        <p><span lang="fr">Processeur</span><span lang="en">Processor</span></p>
+        <div class="seg" data-q="cpu"><button data-v="4"><span lang="fr">4 cœurs</span><span lang="en">4 threads</span></button><button data-v="8" aria-pressed="true"><span lang="fr">6 à 8</span><span lang="en">6 to 8</span></button><button data-v="12">12 +</button></div>
+        <p><span lang="fr">Carte graphique</span><span lang="en">Graphics card</span></p>
+        <div class="seg" data-q="gpu"><button data-v="0"><span lang="fr">Intégrée</span><span lang="en">Integrated</span></button><button data-v="1" aria-pressed="true"><span lang="fr">Dédiée</span><span lang="en">Dedicated</span></button></div>
+      </div>
+    </div>
+    <div class="check-result" id="check-result">
+      <p class="cr-verdict" id="cr-verdict"></p>
+      <div class="cr-row"><span><span lang="fr">Agents en même temps</span><span lang="en">Agents at once</span></span><div class="cr-agents" id="cr-agents"><i></i><i></i><i></i><i></i></div></div>
+      <div class="cr-row"><span>Roblox Studio</span><b id="cr-studio"></b></div>
+      <div class="cr-row"><span>Blender</span><b id="cr-blender"></b></div>
+      <a class="btn glass big" id="download" href="#"><span lang="fr">Télécharger Cubit (gratuit)</span><span lang="en">Download Cubit (free)</span></a>
+      <p class="fine"><span lang="fr">Sans licence, seul le test du PC est accessible.</span><span lang="en">Without a licence, only the PC test is available.</span></p>
+    </div>
+  </section>
+
+  <!-- ============ CE QU'IL TE FAUT ============ -->
+  <section class="needs">
+    <h2><span lang="fr">Ce qu'il te faut</span><span lang="en">What you need</span></h2>
+    <div class="not-ai-box">
+      <b><span lang="fr">Cubit n'est pas une IA.</span><span lang="en">Cubit is not an AI.</span></b>
+      <p><span lang="fr">C'est un logiciel qui pilote Claude Code, avec ton propre abonnement Claude. Seul, Claude fait une chose à la fois dans un terminal. Avec Cubit, il travaille en équipe : plusieurs agents en même temps, un Chef de projet qui répartit, le code envoyé dans Studio, les sauvegardes, l'annulation en un clic, le téléphone, l'équipe. Tu payes l'outil, pas l'intelligence.</span><span lang="en">It's software that drives Claude Code with your own Claude plan. On its own, Claude does one thing at a time in a terminal. With Cubit it works as a team: several agents at once, a project lead that splits the work, code sent into Studio, backups, one-click undo, your phone, your team. You pay for the tool, not the intelligence.</span></p>
+    </div>
+    <div class="needs-row">
+      <p><b>Windows 10 / 11</b><span lang="fr">Un PC, rien d'autre à installer à la main.</span><span lang="en">A PC, nothing else to install by hand.</span></p>
+      <p><b><span lang="fr">Ton abonnement Claude</span><span lang="en">Your Claude plan</span></b><span lang="fr">Pro ou Max. Les agents l'utilisent, Cubit ne revend pas d'accès.</span><span lang="en">Pro or Max. The agents use it, Cubit doesn't resell access.</span></p>
+      <p><b>Roblox Studio</b><span lang="fr">Avec son connecteur, que Cubit t'aide à installer.</span><span lang="en">With its connector, which Cubit helps you set up.</span></p>
+    </div>
+  </section>
+
+  <!-- ============ PRIX ============ -->
+  <section class="price" id="price">
+    <div class="price-card">
+      <div class="price-left">
+        <h2><span lang="fr">Une licence. Pour toujours.</span><span lang="en">One licence. Forever.</span></h2>
+        <p class="amount" data-price></p>
+        <p class="muted"><span lang="fr">Paiement unique, toutes les mises à jour comprises.</span><span lang="en">One-time payment, every update included.</span></p>
+        <a class="btn buy big" id="buy" href="#"><span lang="fr">Acheter Cubit</span><span lang="en">Buy Cubit</span></a>
+        <form class="buy-form" id="buy-form" hidden>
+          <label for="buy-email"><span lang="fr">L'email de ton compte Cubit</span><span lang="en">Your Cubit account email</span></label>
+          <input id="buy-email" type="email" required autocomplete="email" placeholder="toi@exemple.fr">
+          <p class="fine"><span lang="fr">L'accès s'active tout seul sur ce compte après le paiement. Pas encore de compte ? Crée-le dans l'appli avec cet email, avant ou après.</span><span lang="en">Access turns on by itself for this account after payment. No account yet? Create it in the app with this email, before or after.</span></p>
+          <button class="btn buy" type="submit" data-pay="card"><span lang="fr">Payer par carte ou PayPal</span><span lang="en">Pay by card or PayPal</span></button>
+          <button class="btn glass" type="submit" data-pay="crypto"><span lang="fr">Payer en crypto</span><span lang="en">Pay with crypto</span></button>
+          <p class="fine"><span lang="fr">Carte et PayPal via Payhip (paie avec cet email), crypto (BTC, ETH, USDT, SOL…) via NOWPayments.</span><span lang="en">Card and PayPal via Payhip (pay with this email), crypto (BTC, ETH, USDT, SOL…) via NOWPayments.</span></p>
+          <p class="buy-err" id="buy-err" role="alert"></p>
+        </form>
+        <a class="dl-link" href="#check"><span lang="fr">Pas sûr ? Teste ton PC gratuitement</span><span lang="en">Not sure? Test your PC for free</span></a>
+        <p class="fine" id="buy-soon" hidden><span lang="fr">La vente ouvre très bientôt.</span><span lang="en">Sales open very soon.</span></p>
+      </div>
+      <ul class="ticks price-list">
+        <li><span lang="fr">Cubit sur ton PC, toutes les fonctions</span><span lang="en">Cubit on your PC, every feature</span></li>
+        <li><span lang="fr">Cubit mobile</span><span lang="en">Cubit mobile</span></li>
+        <li><span lang="fr">Le mode Équipe (une licence par membre)</span><span lang="en">Team mode (one licence per member)</span></li>
+        <li><span lang="fr">Toutes les mises à jour futures</span><span lang="en">Every future update</span></li>
+        <li><span lang="fr">Accès activé tout seul sur ton compte, juste après l'achat</span><span lang="en">Access turned on for your account right after purchase</span></li>
+        <li class="no"><span lang="fr">L'IA n'est pas incluse : elle vient de ton abonnement Claude Pro ou Max</span><span lang="en">The AI isn't included: it comes from your Claude Pro or Max plan</span></li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ============ FAQ ============ -->
+  <section class="faq" id="faq">
+    <h2>FAQ</h2>
+    <div class="faq-grid">
+      <details><summary><span lang="fr">Cubit, c'est une IA ?</span><span lang="en">Is Cubit an AI?</span></summary>
+        <p><span lang="fr">Non. Cubit est un logiciel : il organise, lance et surveille des agents Claude Code pour en tirer le maximum sur Roblox. L'intelligence vient de ton abonnement Claude, que Cubit ne vend pas et ne revend pas.</span><span lang="en">No. Cubit is software: it organises, launches and watches Claude Code agents to get the most out of them on Roblox. The intelligence comes from your Claude plan, which Cubit neither sells nor resells.</span></p></details>
+      <details><summary><span lang="fr">Est-ce que je dois savoir coder ?</span><span lang="en">Do I need to know how to code?</span></summary>
+        <p><span lang="fr">Non. Tu décris ce que tu veux, les agents écrivent le code. Lire un peu de Luau aide à vérifier, sans être obligatoire.</span><span lang="en">No. You describe what you want, the agents write the code. Reading a bit of Luau helps you check, but isn't required.</span></p></details>
+      <details><summary><span lang="fr">Pourquoi mon propre abonnement Claude ?</span><span lang="en">Why my own Claude subscription?</span></summary>
+        <p><span lang="fr">Cubit pilote Claude Code avec ton compte : tu gardes la main sur tes limites, et Cubit ne voit jamais tes identifiants Claude.</span><span lang="en">Cubit drives Claude Code with your account: you control your limits, and Cubit never sees your Claude credentials.</span></p></details>
+      <details><summary><span lang="fr">Ça marche sur Mac ?</span><span lang="en">Does it work on Mac?</span></summary>
+        <p><span lang="fr">Pas encore : Cubit est fait pour Windows 10 et 11.</span><span lang="en">Not yet: Cubit is built for Windows 10 and 11.</span></p></details>
+      <details><summary><span lang="fr">Mon code reste à moi ?</span><span lang="en">Does my code stay mine?</span></summary>
+        <p><span lang="fr">Oui. Ton jeu est un dossier sur ton PC. En mode Équipe, il vit dans un dépôt GitHub privé, sur ton compte.</span><span lang="en">Yes. Your game is a folder on your PC. In Team mode, it lives in a private GitHub repo, on your account.</span></p></details>
+      <details><summary><span lang="fr">Combien de PC par licence ?</span><span lang="en">How many PCs per licence?</span></summary>
+        <p><span lang="fr">La licence suit ton compte Cubit : PC fixe ou portable. En équipe, chaque membre a la sienne.</span><span lang="en">The licence follows your Cubit account: desktop or laptop. In a team, each member has their own.</span></p></details>
+      <details><summary><span lang="fr">Et si ça ne me convient pas ?</span><span lang="en">What if it isn't for me?</span></summary>
+        <p><span lang="fr">Écris-nous dans les 14 jours suivant l'achat : on te rembourse.</span><span lang="en">Write to us within 14 days of purchase and we'll refund you.</span></p></details>
+    </div>
+  </section>
+
+  <!-- ============ DERNIER APPEL ============ -->
+  <section class="final">
+    <h2><span lang="fr">Ton prochain jeu commence ici.</span><span lang="en">Your next game starts here.</span></h2>
+    <a class="btn buy" href="#price"><span lang="fr">Acheter Cubit</span><span lang="en">Get Cubit</span><b data-price></b></a>
+  </section>
+</main>
+
+<footer class="foot">
+  <div class="foot-brand"><img src="img/logo-256.png" alt="" width="40" height="40"><div><b>MEO STUDIO</b><span lang="fr">Fait par des devs Roblox, pour des devs Roblox.</span><span lang="en">Made by Roblox devs, for Roblox devs.</span></div></div>
+  <nav class="foot-links" aria-label="Liens">
+    <a href="legal.html#mentions"><span lang="fr">Mentions légales</span><span lang="en">Legal notice</span></a>
+    <a href="legal.html#cgv"><span lang="fr">Conditions de vente</span><span lang="en">Terms of sale</span></a>
+    <a href="legal.html#confidentialite"><span lang="fr">Confidentialité</span><span lang="en">Privacy</span></a>
+    <a data-contact href="#">Contact</a>
+  </nav>
+  <p class="fine"><span lang="fr">Cubit n'est affilié ni à Roblox Corporation ni à Anthropic. Roblox et Claude sont des marques de leurs propriétaires.</span><span lang="en">Cubit is not affiliated with Roblox Corporation or Anthropic. Roblox and Claude are trademarks of their respective owners.</span></p>
+</footer>
+
+<script src="site.js?v=5"></script>
+</body>
+</html>
