@@ -6,9 +6,9 @@
   --line: rgba(160, 175, 255, .16);
   --text: #f1f3ff;
   --muted: #a5acd0;
-  --blue: #5b8cff;       /* le bleu de l'appli */
-  --violet: #8f6bff;
-  --flame: #ff7a2f;      /* l'orange du logo : l'achat et l'attention */
+  --blue: #5b7cff;       /* le bleu de l'appli */
+  --violet: #8d69c8;
+  --flame: #ff8a3c;      /* l'orange du logo : l'achat et l'attention */
   --flame-2: #ffb03a;
   --ok: #4fe0a0;
   --display: 'Bricolage Grotesque', system-ui, sans-serif;
@@ -33,7 +33,7 @@ html[lang="fr"] [lang="en"], html[lang="en"] [lang="fr"] { display: none !import
 .nav { position: fixed; inset: 0 0 auto; z-index: 40; display: flex; align-items: center; gap: 32px; padding: 16px var(--pad); transition: background .25s, border-color .25s, padding .25s; border-bottom: 1px solid transparent; }
 .nav.solid { background: rgba(7, 9, 23, .78); backdrop-filter: blur(16px) saturate(140%); border-color: var(--line); padding-top: 11px; padding-bottom: 11px; }
 .brand { display: flex; align-items: center; gap: 11px; text-decoration: none; font: 800 21px var(--display); letter-spacing: -.02em; }
-.brand img { border-radius: 10px; box-shadow: 0 0 22px rgba(255, 122, 47, .45); }
+.brand img { border-radius: 10px; box-shadow: none; filter: drop-shadow(0 0 10px rgba(143,107,255,.55)); }
 .nav-links { display: flex; gap: 26px; }
 .nav-links a { text-decoration: none; color: var(--muted); font-weight: 600; font-size: 15px; transition: color .15s; }
 .nav-links a:hover { color: var(--text); }
