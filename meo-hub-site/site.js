@@ -1,8 +1,9 @@
-// MEO Hub — site de vente : réglages à remplir ici, puis langue, démo animée, visite de l'appli
+// Cubit — site de vente : réglages à remplir ici, puis langue, démo animée, visite de l'appli
 const SITE = {
-  price: { fr: '149 €', en: '€149' }, // prix affiché (le vrai prix est celui de la boutique Lemon Squeezy)
+  price: { fr: '149 €', en: '€149' }, // prix affiché (le vrai prix est celui de Payhip / de la fonction meo-pay)
   downloadUrl: 'https://github.com/OnwaYy/meo-hub-releases/releases/latest', // téléchargement gratuit (test du PC)
-  checkoutUrl: '',                   // lien de paiement Lemon Squeezy (vide = « La vente ouvre très bientôt »)
+  payhipUrl: '',                     // lien du produit Payhip (carte, PayPal), ex. https://payhip.com/b/AbC12
+  cryptoApi: '',                     // fonction Supabase meo-pay (crypto), vide = pas de crypto
   contactEmail: ''                   // email de contact affiché en bas de page
 };
 
@@ -19,7 +20,7 @@ function pickLang() {
 function setLang(l) {
   document.documentElement.lang = l;
   $$('[data-price]').forEach((e) => { e.textContent = SITE.price[l]; });
-  document.title = l === 'fr' ? 'MEO Hub · l\'atelier de vibe coding pour Roblox' : 'MEO Hub · the vibe coding workshop for Roblox';
+  document.title = l === 'fr' ? 'Cubit · l\'atelier de vibe coding pour Roblox' : 'Cubit · the vibe coding workshop for Roblox';
   try { localStorage.setItem('meo-lang', l); } catch {}
   showShot(currentShot);
   startDemo();
@@ -34,8 +35,39 @@ addEventListener('scroll', onScroll, { passive: true }); onScroll();
 
 // ---------- Achat et contact ----------
 const buy = $('#buy');
-if (SITE.checkoutUrl) buy.href = SITE.checkoutUrl;
-else { buy.removeAttribute('href'); buy.setAttribute('aria-disabled', 'true'); buy.style.opacity = '.55'; buy.style.pointerEvents = 'none'; $('#buy-soon').hidden = false; }
+if (SITE.payhipUrl || SITE.cryptoApi) {
+  buy.addEventListener('click', (e) => { e.preventDefault(); $('#buy-form').hidden = false; buy.style.display = 'none'; $('#buy-email').focus(); });
+  if (!SITE.payhipUrl) $('[data-pay=card]').remove();
+  if (!SITE.cryptoApi) $('[data-pay=crypto]').remove();
+} else { buy.removeAttribute('href'); buy.setAttribute('aria-disabled', 'true'); buy.style.opacity = '.55'; buy.style.pointerEvents = 'none'; $('#buy-soon').hidden = false; }
+// L'email du compte Cubit part avec le paiement : l'accès s'active tout seul sur ce compte
+$('#buy-form').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const email = $('#buy-email').value.trim().toLowerCase();
+  const how = e.submitter?.dataset.pay || (SITE.payhipUrl ? 'card' : 'crypto');
+  const err = $('#buy-err'); const btns = $$('#buy-form button');
+  err.textContent = '';
+  const fr = lang() === 'fr';
+  if (how === 'card') {
+    location.href = SITE.payhipUrl;
+    return;
+  }
+  btns.forEach((b) => { b.disabled = true; });
+  try {
+    const r = await fetch(`${SITE.cryptoApi}?source=crypto-invoice`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email }) });
+    const j = await r.json().catch(() => ({}));
+    if (!r.ok || !j.url) throw new Error(j.error || r.status);
+    location.href = j.url;
+  } catch (x) {
+    btns.forEach((b) => { b.disabled = false; });
+    err.textContent = fr ? `Le paiement crypto n'a pas pu s'ouvrir (${x.message}).` : `Couldn't open crypto payment (${x.message}).`;
+  }
+});
+if (/[?&]achat=ok/.test(location.search)) {
+  const done = document.createElement('p'); done.className = 'buy-ok';
+  done.innerHTML = '<span lang="fr">Merci ! Ton accès s\'active sur ton compte d\'ici une minute : ouvre Cubit et connecte-toi.</span><span lang="en">Thanks! Your access turns on within a minute: open Cubit and sign in.</span>';
+  buy.after(done);
+}
 $$('[data-contact]').forEach((a) => { if (SITE.contactEmail) a.href = `mailto:${SITE.contactEmail}`; else a.remove(); });
 
 // ---------- Visite de l'appli (onglets) ----------
@@ -52,7 +84,7 @@ function showShot(k) {
   const img = $('#shot');
   if (!img.src.endsWith(`img/${k}.webp`)) {
     img.classList.add('swap');
-    setTimeout(() => { img.src = `img/${k}.webp`; img.alt = `MEO Hub : ${k}`; img.onload = () => img.classList.remove('swap'); }, calm ? 0 : 200);
+    setTimeout(() => { img.src = `img/${k}.webp`; img.alt = `Cubit : ${k}`; img.onload = () => img.classList.remove('swap'); }, calm ? 0 : 200);
   }
   $('#caption').textContent = SHOTS[k][lang()];
 }
@@ -238,7 +270,7 @@ function renderCheck() {
   v.className = `cr-verdict ${level}`;
   v.textContent = level === 'ok' ? (fr ? 'Ton PC peut tout faire tourner.' : 'Your PC can run it all.')
     : level === 'warn' ? (fr ? 'Ça marche, avec quelques limites.' : 'It works, with a few limits.')
-    : (fr ? 'Trop juste pour MEO Hub.' : 'Too tight for MEO Hub.');
+    : (fr ? 'Trop juste pour Cubit.' : 'Too tight for Cubit.');
   $$('#cr-agents i').forEach((d, i) => setTimeout(() => d.classList.toggle('on', i < agents), calm ? 0 : i * 90));
   const st = $('#cr-studio'); st.textContent = fr ? 'Oui' : 'Yes'; st.className = 'yes';
   const bl = $('#cr-blender'); bl.textContent = blender ? (fr ? 'Oui' : 'Yes') : (fr ? 'Lent ou trop juste' : 'Slow or too tight'); bl.className = blender ? 'yes' : 'no';

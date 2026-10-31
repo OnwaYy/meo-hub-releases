@@ -1,4 +1,4 @@
-/* MEO Hub — site de vente, version « qui en jette » */
+/* Cubit — site de vente, version « qui en jette » */
 :root {
   --night: #070917;      /* fond */
   --night-2: #0d1130;    /* bandes */
@@ -350,3 +350,10 @@ h3 { font: 700 21px/1.25 var(--display); margin: 0 0 8px; letter-spacing: -.015e
 .price-list li.no { color: #9aa1c7; }
 .price-list li.no::before { background: rgba(255,122,47,.15); }
 .price-list li.no::after { content: 'i'; border: 0; transform: none; left: 0; top: .2em; width: 20px; height: 20px; text-align: center; font: 700 13px/20px var(--display); color: var(--flame); }
+.buy-form { display: grid; gap: 10px; margin-top: 4px; max-width: 420px; }
+.buy-form label { font-weight: 600; }
+.buy-form input { padding: 12px 14px; border-radius: 12px; border: 1px solid rgba(255,255,255,.18); background: rgba(0,0,0,.25); color: inherit; font: inherit; }
+.buy-form button[disabled] { opacity: .6; }
+.buy-err { color: #ff8f8f; min-height: 1em; margin: 0; }
+.buy-ok { margin-top: 10px; padding: 12px 14px; border-radius: 12px; background: rgba(134,227,187,.14); color: #bff3dc; }
+.buy-form[hidden] { display: none; }
