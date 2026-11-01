@@ -2,7 +2,7 @@
 const SITE = {
   price: { fr: '149 €', en: '€149' }, // prix affiché (le vrai prix est celui de Payhip / de la fonction meo-pay)
   downloadUrl: 'https://github.com/OnwaYy/meo-hub-releases/releases/latest', // téléchargement gratuit (test du PC)
-  payhipUrl: '',                     // lien du produit Payhip (carte, PayPal), ex. https://payhip.com/b/AbC12
+  payhipUrl: 'https://payhip.com/b/lfs9F',                     // lien du produit Payhip (carte, PayPal), ex. https://payhip.com/b/AbC12
   cryptoApi: '',                     // fonction Supabase meo-pay (crypto), vide = pas de crypto
   contactEmail: ''                   // email de contact affiché en bas de page
 };
