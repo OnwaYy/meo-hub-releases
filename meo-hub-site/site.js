@@ -113,7 +113,14 @@ $$('#pay-choices [data-pay]').forEach((btn) => btn.addEventListener('click', asy
   const err = $('#buy-err'); const fr = lang() === 'fr';
   err.textContent = '';
   if (!session) return;
-  if (btn.dataset.pay === 'card') { navigator.clipboard?.writeText(session.email).catch(() => {}); location.href = SITE.payhipUrl; return; }
+  if (btn.dataset.pay === 'card') {
+    navigator.clipboard?.writeText(session.email).catch(() => {});
+    // Paiement par-dessus le site (fenêtre Payhip) ; sinon la page Payhip classique
+    const product = SITE.payhipUrl.split('/').pop();
+    try { if (window.Payhip?.Checkout?.open) { window.Payhip.Checkout.open({ product }); return; } } catch {}
+    location.href = SITE.payhipUrl;
+    return;
+  }
   btn.disabled = true;
   try {
     const r = await fetch(`${SITE.cryptoApi}?source=crypto-invoice`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email: session.email }) });
