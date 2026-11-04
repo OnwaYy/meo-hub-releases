@@ -357,3 +357,15 @@ h3 { font: 700 21px/1.25 var(--display); margin: 0 0 8px; letter-spacing: -.015e
 .buy-err { color: #ff8f8f; min-height: 1em; margin: 0; }
 .buy-ok { margin-top: 10px; padding: 12px 14px; border-radius: 12px; background: rgba(134,227,187,.14); color: #bff3dc; }
 .buy-form[hidden] { display: none; }
+.buy-flow { margin-top: 4px; }
+.acc-tabs { display: flex; gap: 6px; background: rgba(0,0,0,.25); padding: 4px; border-radius: 12px; }
+.acc-tab { flex: 1; border: 0; background: none; color: var(--muted); font: 600 14px var(--body); padding: 9px 10px; border-radius: 9px; cursor: pointer; }
+.acc-tab.on { background: var(--glass); color: var(--text); box-shadow: inset 0 0 0 1px var(--line); }
+.buy-form input[type=password] { padding: 12px 14px; border-radius: 12px; border: 1px solid rgba(255,255,255,.18); background: rgba(0,0,0,.25); color: inherit; font: inherit; }
+.link-btn { background: none; border: 0; color: var(--flame-2); font: 600 13px var(--body); cursor: pointer; padding: 0; text-decoration: underline; justify-self: start; }
+.acc-who, .pay-note { margin: 0; font-size: 14px; color: var(--muted); }
+.acc-who b, .pay-note b { color: var(--text); }
+.pay-note { padding: 10px 12px; border-radius: 12px; background: rgba(255,138,60,.10); border: 1px solid rgba(255,138,60,.25); }
+#pay-choices { display: grid; gap: 10px; }
+[hidden] { display: none !important; }
+#acc-pass2-wrap { display: grid; gap: 10px; } #acc-pass2-wrap input { width: 100%; box-sizing: border-box; }

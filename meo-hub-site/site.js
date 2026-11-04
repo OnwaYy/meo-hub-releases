@@ -35,34 +35,104 @@ addEventListener('scroll', onScroll, { passive: true }); onScroll();
 
 // ---------- Achat et contact ----------
 const buy = $('#buy');
+// Compte Cubit sur le site : le même que dans l'appli (Supabase, clé publique faite pour une page web)
+const SB = 'https://rbthdyzaomiltdtyxpaw.supabase.co';
+const SB_KEY = 'sb_publishable_B1clYdJvm550ZwcmPuXUMA_NLgO6mNi';
+const RESET = location.origin + location.pathname.replace(/[^/]*$/, '') + 'reset.html';
+const sbFetch = async (path, body, token) => {
+  const r = await fetch(SB + path, { method: 'POST', headers: { apikey: SB_KEY, Authorization: 'Bearer ' + (token || SB_KEY), 'Content-Type': 'application/json' }, body: JSON.stringify(body || {}) });
+  const j = await r.json().catch(() => ({}));
+  if (!r.ok) throw new Error(j.msg || j.error_description || j.message || j.error || r.status);
+  return j;
+};
+const FR_ERR = [[/invalid login credentials/i, 'Email ou mot de passe incorrect.', 'Wrong email or password.'],
+  [/email not confirmed/i, 'Confirme d\'abord ton email avec le lien reçu, puis connecte-toi.', 'Confirm your email with the link you received, then sign in.'],
+  [/already registered|already exists/i, 'Un compte existe déjà avec cet email : choisis « J\'ai déjà un compte ».', 'An account already exists with this email: choose “I have an account”.'],
+  [/at least (\d+)/i, 'Le mot de passe est trop court (6 caractères minimum).', 'Password too short (6 characters minimum).'],
+  [/invalid.*email|unable to validate email/i, 'Adresse email invalide.', 'Invalid email address.'],
+  [/rate limit|too many|security purposes/i, 'Trop de tentatives, réessaie dans quelques minutes.', 'Too many attempts, try again in a few minutes.'],
+  [/fetch|network/i, 'Impossible de joindre le serveur, vérifie ta connexion.', 'Can\'t reach the server, check your connection.']];
+const errText = (m) => { const f = FR_ERR.find(([re]) => re.test(m)); return f ? (lang() === 'fr' ? f[1] : f[2]) : m; };
+let session = null;
+try { session = JSON.parse(sessionStorage.getItem('cubit-session') || 'null'); } catch {}
+let accMode = 'signup';
+function setAccMode(m) {
+  accMode = m;
+  $$('.acc-tab').forEach((t) => t.classList.toggle('on', t.dataset.acc === m));
+  $('#acc-pass2-wrap').hidden = m !== 'signup';
+  $('#acc-pass2').required = m === 'signup';
+  $('#acc-pass').autocomplete = m === 'signup' ? 'new-password' : 'current-password';
+  $('#acc-forgot').hidden = m !== 'login';
+  $('#acc-err').textContent = '';
+}
+async function showPay() {
+  $('#acc-form').hidden = true; $('#pay-box').hidden = false;
+  $('#acc-who').textContent = session.email; $('#pay-email').textContent = session.email;
+  // Déjà acheté ? (l'appel active aussi un achat fait avant la création du compte)
+  let owned = false;
+  try { owned = !!(await sbFetch('/rest/v1/rpc/my_access', {}, session.token)).has_access; } catch {}
+  $('#pay-owned').hidden = !owned; $('#pay-choices').hidden = owned;
+}
 if (SITE.payhipUrl || SITE.cryptoApi) {
-  buy.addEventListener('click', (e) => { e.preventDefault(); $('#buy-form').hidden = false; buy.style.display = 'none'; $('#buy-email').focus(); });
+  buy.addEventListener('click', (e) => {
+    e.preventDefault(); $('#buy-flow').hidden = false; buy.style.display = 'none';
+    if (session && session.exp > Date.now()) showPay(); else { setAccMode('signup'); $('#acc-email').focus(); }
+  });
   if (!SITE.payhipUrl) $('[data-pay=card]').remove();
-  if (!SITE.cryptoApi) $('[data-pay=crypto]').remove();
+  if (!SITE.cryptoApi) { $('[data-pay=crypto]').remove(); $$('[data-crypto-note]').forEach((n) => n.remove()); }
 } else { buy.removeAttribute('href'); buy.setAttribute('aria-disabled', 'true'); buy.style.opacity = '.55'; buy.style.pointerEvents = 'none'; $('#buy-soon').hidden = false; }
-// L'email du compte Cubit part avec le paiement : l'accès s'active tout seul sur ce compte
-$('#buy-form').addEventListener('submit', async (e) => {
+$$('.acc-tab').forEach((t) => t.addEventListener('click', () => setAccMode(t.dataset.acc)));
+$('#acc-switch').addEventListener('click', () => { session = null; try { sessionStorage.removeItem('cubit-session'); } catch {} $('#pay-box').hidden = true; $('#acc-form').hidden = false; setAccMode('login'); });
+$('#acc-forgot').addEventListener('click', async () => {
+  const email = $('#acc-email').value.trim(); const fr = lang() === 'fr';
+  if (!email) { $('#acc-err').textContent = fr ? 'Entre ton email, puis clique à nouveau.' : 'Enter your email, then click again.'; return; }
+  try { await sbFetch('/auth/v1/recover?redirect_to=' + encodeURIComponent(RESET), { email }); $('#acc-err').textContent = fr ? 'Email envoyé : suis le lien pour choisir un nouveau mot de passe.' : 'Email sent: follow the link to set a new password.'; }
+  catch (x) { $('#acc-err').textContent = errText(x.message); }
+});
+// Création ou connexion du compte, puis passage au paiement
+$('#acc-form').addEventListener('submit', async (e) => {
   e.preventDefault();
-  const email = $('#buy-email').value.trim().toLowerCase();
-  const how = e.submitter?.dataset.pay || (SITE.payhipUrl ? 'card' : 'crypto');
-  const err = $('#buy-err'); const btns = $$('#buy-form button');
+  const email = $('#acc-email').value.trim().toLowerCase(); const password = $('#acc-pass').value;
+  const err = $('#acc-err'); const fr = lang() === 'fr';
   err.textContent = '';
-  const fr = lang() === 'fr';
-  if (how === 'card') {
-    location.href = SITE.payhipUrl;
-    return;
-  }
-  btns.forEach((b) => { b.disabled = true; });
+  if (accMode === 'signup' && password.length < 8) { err.textContent = fr ? 'Choisis un mot de passe d\'au moins 8 caractères.' : 'Pick a password of at least 8 characters.'; return; }
+  if (accMode === 'signup' && password !== $('#acc-pass2').value) { err.textContent = fr ? 'Les deux mots de passe ne sont pas pareils.' : 'Passwords don\'t match.'; return; }
+  $('#acc-go').disabled = true;
   try {
-    const r = await fetch(`${SITE.cryptoApi}?source=crypto-invoice`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email }) });
+    const j = accMode === 'signup' ? await sbFetch('/auth/v1/signup?redirect_to=' + encodeURIComponent(location.origin + location.pathname + '?compte=ok#price'), { email, password }) : await sbFetch('/auth/v1/token?grant_type=password', { email, password });
+    if (!j.access_token) { err.textContent = fr ? 'Compte créé ! Ouvre l\'email que tu viens de recevoir et clique sur le lien pour confirmer ton adresse, puis reviens ici et choisis « J\'ai déjà un compte ».' : 'Account created! Confirm your email with the link you received, then come back and choose “I have an account”.'; return; }
+    session = { email: (j.user?.email || email).toLowerCase(), token: j.access_token, exp: Date.now() + (j.expires_in || 3600) * 1000 - 60000 };
+    try { sessionStorage.setItem('cubit-session', JSON.stringify(session)); } catch {}
+    await showPay();
+  } catch (x) { err.textContent = errText(x.message); }
+  finally { $('#acc-go').disabled = false; }
+});
+$('#pay-copy').addEventListener('click', () => { navigator.clipboard?.writeText(session?.email || ''); $('#pay-copy').textContent = lang() === 'fr' ? 'copié ✓' : 'copied ✓'; });
+// Paiement : l'email du compte part avec la commande
+$$('#pay-choices [data-pay]').forEach((btn) => btn.addEventListener('click', async () => {
+  const err = $('#buy-err'); const fr = lang() === 'fr';
+  err.textContent = '';
+  if (!session) return;
+  if (btn.dataset.pay === 'card') { navigator.clipboard?.writeText(session.email).catch(() => {}); location.href = SITE.payhipUrl; return; }
+  btn.disabled = true;
+  try {
+    const r = await fetch(`${SITE.cryptoApi}?source=crypto-invoice`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email: session.email }) });
     const j = await r.json().catch(() => ({}));
     if (!r.ok || !j.url) throw new Error(j.error || r.status);
     location.href = j.url;
   } catch (x) {
-    btns.forEach((b) => { b.disabled = false; });
+    btn.disabled = false;
     err.textContent = fr ? `Le paiement crypto n'a pas pu s'ouvrir (${x.message}).` : `Couldn't open crypto payment (${x.message}).`;
   }
-});
+}));
+// Retour du lien de confirmation : email confirmé, on propose de se connecter
+if (/[?&]compte=ok/.test(location.search) || /type=signup/.test(location.hash)) {
+  history.replaceState(null, '', location.pathname + '#price');
+  const ok = document.createElement('p'); ok.className = 'buy-ok';
+  ok.innerHTML = '<span lang="fr">Email confirmé ! Connecte-toi pour finir ton achat, ou ouvre l\'appli Cubit.</span><span lang="en">Email confirmed! Sign in to finish your purchase, or open the Cubit app.</span>';
+  buy.after(ok);
+  if (SITE.payhipUrl || SITE.cryptoApi) { $('#buy-flow').hidden = false; buy.style.display = 'none'; setAccMode('login'); }
+}
 if (/[?&]achat=ok/.test(location.search)) {
   const done = document.createElement('p'); done.className = 'buy-ok';
   done.innerHTML = '<span lang="fr">Merci ! Ton accès s\'active sur ton compte d\'ici une minute : ouvre Cubit et connecte-toi.</span><span lang="en">Thanks! Your access turns on within a minute: open Cubit and sign in.</span>';

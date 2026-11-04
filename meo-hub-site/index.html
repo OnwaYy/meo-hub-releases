@@ -13,7 +13,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Figtree:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap">
-<link rel="stylesheet" href="style.css?v=5">
+<link rel="stylesheet" href="style.css?v=6">
 </head>
 <body>
 <a class="skip" href="#main"><span lang="fr">Aller au contenu</span><span lang="en">Skip to content</span></a>
@@ -264,15 +264,37 @@
         <p class="amount" data-price></p>
         <p class="muted"><span lang="fr">Paiement unique, toutes les mises à jour comprises.</span><span lang="en">One-time payment, every update included.</span></p>
         <a class="btn buy big" id="buy" href="#"><span lang="fr">Acheter Cubit</span><span lang="en">Buy Cubit</span></a>
-        <form class="buy-form" id="buy-form" hidden>
-          <label for="buy-email"><span lang="fr">L'email de ton compte Cubit</span><span lang="en">Your Cubit account email</span></label>
-          <input id="buy-email" type="email" required autocomplete="email" placeholder="toi@exemple.fr">
-          <p class="fine"><span lang="fr">L'accès s'active tout seul sur ce compte après le paiement. Pas encore de compte ? Crée-le dans l'appli avec cet email, avant ou après.</span><span lang="en">Access turns on by itself for this account after payment. No account yet? Create it in the app with this email, before or after.</span></p>
-          <button class="btn buy" type="submit" data-pay="card"><span lang="fr">Payer par carte ou PayPal</span><span lang="en">Pay by card or PayPal</span></button>
-          <button class="btn glass" type="submit" data-pay="crypto"><span lang="fr">Payer en crypto</span><span lang="en">Pay with crypto</span></button>
-          <p class="fine"><span lang="fr">Carte et PayPal via Payhip (paie avec cet email), crypto (BTC, ETH, USDT, SOL…) via NOWPayments.</span><span lang="en">Card and PayPal via Payhip (pay with this email), crypto (BTC, ETH, USDT, SOL…) via NOWPayments.</span></p>
-          <p class="buy-err" id="buy-err" role="alert"></p>
-        </form>
+        <div class="buy-flow" id="buy-flow" hidden>
+          <!-- 1. Le compte Cubit (le même dans l'appli) -->
+          <form class="buy-form" id="acc-form">
+            <div class="acc-tabs" role="tablist">
+              <button type="button" class="acc-tab on" data-acc="signup"><span lang="fr">Créer mon compte</span><span lang="en">Create my account</span></button>
+              <button type="button" class="acc-tab" data-acc="login"><span lang="fr">J'ai déjà un compte</span><span lang="en">I have an account</span></button>
+            </div>
+            <p class="fine"><span lang="fr">C'est le compte avec lequel tu te connecteras dans l'appli Cubit. Ton achat s'y active tout seul.</span><span lang="en">This is the account you'll sign in with in the Cubit app. Your purchase turns on by itself.</span></p>
+            <label for="acc-email">Email</label>
+            <input id="acc-email" type="email" required autocomplete="email" placeholder="toi@exemple.fr">
+            <label for="acc-pass"><span lang="fr">Mot de passe</span><span lang="en">Password</span></label>
+            <input id="acc-pass" type="password" required minlength="8" autocomplete="new-password">
+            <div id="acc-pass2-wrap"><label for="acc-pass2"><span lang="fr">Confirme le mot de passe</span><span lang="en">Confirm password</span></label>
+            <input id="acc-pass2" type="password" minlength="8" autocomplete="new-password"></div>
+            <button class="btn buy" type="submit" id="acc-go"><span lang="fr">Continuer</span><span lang="en">Continue</span></button>
+            <button type="button" class="link-btn" id="acc-forgot" hidden><span lang="fr">Mot de passe oublié ?</span><span lang="en">Forgot your password?</span></button>
+            <p class="buy-err" id="acc-err" role="alert"></p>
+          </form>
+          <!-- 2. Paiement, relié à ce compte -->
+          <div class="buy-form" id="pay-box" hidden>
+            <p class="acc-who"><span lang="fr">Compte :</span><span lang="en">Account:</span> <b id="acc-who"></b> <button type="button" class="link-btn" id="acc-switch"><span lang="fr">changer</span><span lang="en">change</span></button></p>
+            <div id="pay-owned" class="buy-ok" hidden><span lang="fr">Tu as déjà Cubit sur ce compte ! Télécharge l'appli et connecte-toi.</span><span lang="en">You already own Cubit on this account! Download the app and sign in.</span></div>
+            <div id="pay-choices">
+              <p class="pay-note"><span lang="fr">Sur la page de paiement, entre exactement cet email :</span><span lang="en">On the payment page, enter exactly this email:</span> <b id="pay-email"></b> <button type="button" class="link-btn" id="pay-copy"><span lang="fr">copier</span><span lang="en">copy</span></button></p>
+              <button class="btn buy" type="button" data-pay="card"><span lang="fr">Payer par carte ou PayPal</span><span lang="en">Pay by card or PayPal</span></button>
+              <button class="btn glass" type="button" data-pay="crypto"><span lang="fr">Payer en crypto</span><span lang="en">Pay with crypto</span></button>
+              <p class="fine"><span lang="fr">Carte et PayPal via Payhip<span data-crypto-note>, crypto (BTC, ETH, USDT, SOL…) via NOWPayments</span>.</span><span lang="en">Card and PayPal via Payhip<span data-crypto-note>, crypto (BTC, ETH, USDT, SOL…) via NOWPayments</span>.</span></p>
+            </div>
+            <p class="buy-err" id="buy-err" role="alert"></p>
+          </div>
+        </div>
         <a class="dl-link" href="#check"><span lang="fr">Pas sûr ? Teste ton PC gratuitement</span><span lang="en">Not sure? Test your PC for free</span></a>
         <p class="fine" id="buy-soon" hidden><span lang="fr">La vente ouvre très bientôt.</span><span lang="en">Sales open very soon.</span></p>
       </div>
@@ -326,6 +348,6 @@
   <p class="fine"><span lang="fr">Cubit n'est affilié ni à Roblox Corporation ni à Anthropic. Roblox et Claude sont des marques de leurs propriétaires.</span><span lang="en">Cubit is not affiliated with Roblox Corporation or Anthropic. Roblox and Claude are trademarks of their respective owners.</span></p>
 </footer>
 
-<script src="site.js?v=5"></script>
+<script src="site.js?v=6"></script>
 </body>
 </html>
