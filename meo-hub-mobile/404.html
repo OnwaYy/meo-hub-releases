@@ -1,0 +1,10 @@
+<!doctype html>
+<html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Cubit mobile a déménagé</title>
+<script>
+  // Cubit mobile est maintenant sur usecubit.org/app/ (le lien d'association #pair=… est gardé)
+  if ('serviceWorker' in navigator) navigator.serviceWorker.getRegistrations().then((rs) => rs.forEach((r) => r.unregister())).catch(() => {});
+  location.replace('https://usecubit.org/app/' + location.hash);
+</script>
+<style>body{margin:0;min-height:100vh;display:grid;place-items:center;background:#0b0d14;color:#eef0f5;font:16px system-ui;text-align:center;padding:24px}a{color:#ff8a3c}</style>
+</head><body><p>Cubit mobile a déménagé.<br><a href="https://usecubit.org/app/">Ouvrir Cubit mobile</a></p></body></html>
